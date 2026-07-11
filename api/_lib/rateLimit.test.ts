@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll } from 'vitest';
-import { derivePseudonymousIdentity } from './rateLimit';
+import { derivePseudonymousIdentity } from './rateLimit.js';
 
 describe('Pseudonymous Identity Derivation', () => {
   beforeAll(() => {

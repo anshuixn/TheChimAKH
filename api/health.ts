@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { generateRequestId } from './_lib/requestId';
-import { getClientIp } from './_lib/clientIp';
-import { sendResponse, sendInternalError } from './_lib/responseContract';
-import { setSecurityHeaders } from './_lib/http';
+import { generateRequestId } from './_lib/requestId.js';
+import { getClientIp } from './_lib/clientIp.js';
+import { sendResponse, sendInternalError } from './_lib/responseContract.js';
+import { setSecurityHeaders } from './_lib/http.js';
 
 export default function handler(req: VercelRequest, res: VercelResponse): void {
   const requestId = generateRequestId();

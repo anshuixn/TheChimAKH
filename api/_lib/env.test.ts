@@ -1,5 +1,5 @@
 import { describe, test, expect, afterEach } from 'vitest';
-import { getEnv, isProduction, _resetEnvCache } from './env';
+import { getEnv, isProduction, _resetEnvCache } from './env.js';
 
 describe('Server Environment Configuration Validator', () => {
   const originalEnv = { ...process.env };

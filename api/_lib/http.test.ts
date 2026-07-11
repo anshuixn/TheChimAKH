@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterEach } from 'vitest';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { validateOrigin, validateFetchMetadata, validateRequestSize, setSecurityHeaders } from './http';
-import { _resetEnvCache } from './env';
+import { validateOrigin, validateFetchMetadata, validateRequestSize, setSecurityHeaders } from './http.js';
+import { _resetEnvCache } from './env.js';
 
 describe('HTTP Security Policy Assertions', () => {
   beforeAll(() => {

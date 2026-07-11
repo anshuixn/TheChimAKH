@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getEnv } from './env';
-import { logWarn } from './logger';
-import { sendResponse } from './responseContract';
+import { getEnv } from './env.js';
+import { logWarn } from './logger.js';
+import { sendResponse } from './responseContract.js';
 
 /**
  * Validates the CORS origin of the incoming request against trust boundaries.

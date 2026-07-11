@@ -1,9 +1,9 @@
 import { createHmac } from 'crypto';
 import type { VercelRequest } from '@vercel/node';
-import { getEnv } from './env';
-import { getClientIp } from './clientIp';
-import { getSupabaseAdmin } from './supabaseAdmin';
-import { logAlert, logInfo } from './logger';
+import { getEnv } from './env.js';
+import { getClientIp } from './clientIp.js';
+import { getSupabaseAdmin } from './supabaseAdmin.js';
+import { logAlert, logInfo } from './logger.js';
 
 export type RateLimitAction = 'contact' | 'quote' | 'honeypot';
 

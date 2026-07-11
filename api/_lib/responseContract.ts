@@ -1,5 +1,5 @@
 import type { VercelResponse } from '@vercel/node';
-import { logError } from './logger';
+import { logError } from './logger.js';
 
 export type ResponseCategory =
   | 'SUCCESS'

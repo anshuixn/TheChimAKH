@@ -1,15 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { generateRequestId } from './_lib/requestId';
-import { setSecurityHeaders, validateOrigin, validateFetchMetadata, validateRequestSize } from './_lib/http';
-import { sendResponse, sendInternalError } from './_lib/responseContract';
-import { QuoteRequestSchema } from './_lib/validation';
-import { consumeRateLimit } from './_lib/rateLimit';
-import { verifyTurnstileToken } from './_lib/turnstile';
-import { getSupabaseAdmin } from './_lib/supabaseAdmin';
-import { deriveRequestFingerprint } from './_lib/fingerprint';
-import { sendEmailNotification } from './_lib/email';
-import { getClientIp } from './_lib/clientIp';
-import { logInfo, logWarn, logError } from './_lib/logger';
+import { generateRequestId } from './_lib/requestId.js';
+import { setSecurityHeaders, validateOrigin, validateFetchMetadata, validateRequestSize } from './_lib/http.js';
+import { sendResponse, sendInternalError } from './_lib/responseContract.js';
+import { QuoteRequestSchema } from './_lib/validation.js';
+import { consumeRateLimit } from './_lib/rateLimit.js';
+import { verifyTurnstileToken } from './_lib/turnstile.js';
+import { getSupabaseAdmin } from './_lib/supabaseAdmin.js';
+import { deriveRequestFingerprint } from './_lib/fingerprint.js';
+import { sendEmailNotification } from './_lib/email.js';
+import { getClientIp } from './_lib/clientIp.js';
+import { logInfo, logWarn, logError } from './_lib/logger.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   // 1. Request ID Generation
@@ -66,9 +66,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const parsed = QuoteRequestSchema.safeParse(body);
     if (!parsed.success) {
       const fieldErrors: Record<string, string> = {};
-      parsed.error.issues.forEach((err) => {
-        const path = err.path.join('.');
-        fieldErrors[path] = err.message;
+      parsed.error.issues.forEach((issue: any) => {
+        const path = issue.path.join('.');
+        fieldErrors[path] = issue.message;
       });
       logWarn('[Validation] Request payload failed Zod schema checks.', { fieldErrors, requestId });
       return sendResponse(res, 'VALIDATION_ERROR', 'INPUT VALIDATION CHECKS FAILED.', requestId, null, fieldErrors);

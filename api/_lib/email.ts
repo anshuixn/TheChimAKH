@@ -1,5 +1,5 @@
-import { getEnv } from './env';
-import { logError, logInfo } from './logger';
+import { getEnv } from './env.js';
+import { logError, logInfo } from './logger.js';
 
 export interface EmailOptions {
   subject: string;

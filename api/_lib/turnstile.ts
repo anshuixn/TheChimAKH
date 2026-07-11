@@ -1,5 +1,5 @@
-import { getEnv } from './env';
-import { logAlert, logError, logInfo, logWarn } from './logger';
+import { getEnv } from './env.js';
+import { logAlert, logError, logInfo, logWarn } from './logger.js';
 
 export type TurnstileResult =
   | 'VERIFIED'
