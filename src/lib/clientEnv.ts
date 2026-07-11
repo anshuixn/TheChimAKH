@@ -43,13 +43,9 @@ export function validateClientEnv(): void {
       `\n[MAA SITA INT UDHYOG] Client-side environment variables incomplete:\n` +
       `  • VITE_SITE_URL: ${url || 'missing'}\n` +
       `  • VITE_TURNSTILE_SITE_KEY: ${turnstileKey || 'missing'}\n\n` +
-      `Running in local development / demo mode.\n` +
-      `Configure .env.local with valid credentials for full production behaviour.\n`;
+      `Running in demo mode — configure Vercel environment variables for full production behaviour.\n`;
 
-    if (import.meta.env.PROD) {
-      throw new Error(notice);
-    } else {
-      console.warn(notice);
-    }
+    // Always warn, never throw — a missing env var must not crash the UI
+    console.warn(notice);
   }
 }
