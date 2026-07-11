@@ -1,0 +1,149 @@
+/**
+ * Global Styles
+ * ==============
+ * Imports all design system layers in dependency order.
+ * Applied once at root — no global styles in component files.
+ */
+
+@import './tokens.css';
+@import './reset.css';
+@import './typography.css';
+
+/* ── Document base ────────────────────────────────────────── */
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 100%; /* 16px base, respects user preference */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+}
+
+/* ── Skip link ────────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: var(--z-max);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-off-white);
+  color: var(--color-kiln-black);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transform: translateY(-200%);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+}
+
+/* ── Visually hidden (accessible) ─────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Layout utilities ─────────────────────────────────────── */
+
+.container {
+  width: 100%;
+  max-width: var(--content-xl);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--space-10);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-inline: var(--space-16);
+  }
+}
+
+/* ── Selection styling ────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-ember);
+  color: var(--color-off-white);
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-carbon);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-slate);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-smoke);
+  }
+}
+
+/* ── Link base ────────────────────────────────────────────── */
+
+a:hover {
+  color: var(--color-clay);
+}
+
+/* ── Form base ────────────────────────────────────────────── */
+
+input,
+textarea,
+select {
+  background-color: var(--color-carbon);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--color-clay);
+  outline: 1px solid var(--color-clay);
+  outline-offset: 0;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-subtle);
+}

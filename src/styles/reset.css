@@ -1,0 +1,115 @@
+/**
+ * Modern CSS Reset
+ * =================
+ * Based on Josh Comeau's reset, adapted for dark-first cinematic site.
+ * Minimal — only what is genuinely needed.
+ */
+
+/* Box-sizing everywhere */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margins */
+* {
+  margin: 0;
+}
+
+/* Prevent text size adjustment on mobile after orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: auto; /* GSAP controls smooth scroll */
+}
+
+/* Body base */
+body {
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+}
+
+/* Media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Inputs inherit font */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Wrap long words */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Reduce motion for all transitions when user prefers */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Remove list styles — apply to specific lists that need it, not globally */
+/* Headings: use design tokens for sizing, not browser defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+/* Links base */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Buttons: no browser default styling */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Fieldsets */
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+/* Focus-visible: only show focus ring on keyboard navigation */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}

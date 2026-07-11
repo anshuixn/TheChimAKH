@@ -1,0 +1,13 @@
+.widgetWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-block: var(--space-4);
+}
+
+.widgetContainer {
+  min-height: 65px;
+  width: 100%;
+  max-width: 300px;
+}

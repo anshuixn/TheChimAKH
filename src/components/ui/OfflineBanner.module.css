@@ -1,0 +1,18 @@
+.banner {
+  width: 100%;
+  background-color: var(--color-charcoal);
+  border-bottom: 2px solid var(--color-terracotta);
+  padding: var(--space-3) var(--space-6);
+  text-align: center;
+  position: relative;
+  z-index: var(--z-toast);
+}
+
+.text {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-off-white);
+  line-height: var(--leading-normal);
+}

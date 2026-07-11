@@ -1,0 +1,126 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { useFramePreloader } from './useFramePreloader';
+import { useExperienceProgress } from './useExperienceProgress';
+import { ExperienceCanvas } from './ExperienceCanvas';
+import { ExperienceOverlay } from './ExperienceOverlay';
+import { ExperienceNavigation } from './ExperienceNavigation';
+import { ExperienceLoader } from './ExperienceLoader';
+import { EXPERIENCE_CHAPTERS } from './experience.config';
+import styles from './CinematicExperience.module.css';
+
+interface CinematicExperienceProps {
+  frameUrls: string[];
+  onExit: () => void;
+  onQuoteClick: () => void;
+  isInitialPreloadReady: boolean;
+  onPreloadComplete: () => void;
+}
+
+export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
+  frameUrls,
+  onExit,
+  onQuoteClick,
+  isInitialPreloadReady,
+  onPreloadComplete,
+}) => {
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Track rendering frames
+  const [isLoaderDismissed, setIsLoaderDismissed] = useState(false);
+
+  // Setup GSAP scroll tracking
+  const { progress, chapter, frameIndex, scrollToChapter } = useExperienceProgress({
+    triggerRef,
+  });
+
+
+
+  // Priority-based frame cache loader
+  const { cache, loadedCount, totalFrames } = useFramePreloader({
+    frameUrls,
+    currentIndex: frameIndex,
+    onFrameLoaded: () => {
+      // Dismiss initial loader if the first chapter (frames 1–20) is fully loaded in memory
+      if (!isLoaderDismissed) {
+        let firstChapterLoaded = true;
+        for (let i = 1; i <= 20; i++) {
+          if (!cache.has(i)) {
+            firstChapterLoaded = false;
+            break;
+          }
+        }
+        if (firstChapterLoaded) {
+          setIsLoaderDismissed(true);
+          onPreloadComplete();
+        }
+      }
+    },
+    maxCacheSize: 80,
+  });
+
+  // Ensure loader gets dismissed eventually if initial preload was already verified
+  useEffect(() => {
+    if (isInitialPreloadReady && !isLoaderDismissed) {
+      /* eslint-disable-next-line react-hooks/set-state-in-effect */
+      setIsLoaderDismissed(true);
+    }
+  }, [isInitialPreloadReady, isLoaderDismissed]);
+
+  return (
+    <div 
+      className={styles.scrollWrapper} 
+      ref={triggerRef}
+      role="region"
+      aria-label="Cinematic experiential journey of Maa Sita bricks"
+    >
+      {/* Visual Canvas sequence layer */}
+      <div className={styles.canvasStickyContainer}>
+        <ExperienceCanvas 
+          currentIndex={frameIndex}
+          cache={cache}
+          totalFrames={totalFrames}
+        />
+
+        {/* Copy overlays layer */}
+        {isLoaderDismissed && (
+          <ExperienceOverlay 
+            currentChapter={chapter}
+            scrollProgress={progress}
+            onQuoteClick={onQuoteClick}
+          />
+        )}
+
+        {/* Cinematic controls overlay */}
+        {isLoaderDismissed && (
+          <ExperienceNavigation 
+            currentChapter={chapter}
+            onDotClick={scrollToChapter}
+            onExit={onExit}
+          />
+        )}
+      </div>
+
+      {/* Visually hidden screen reader narrative content */}
+      <section className="sr-only">
+        <h2>Brand Journey Transcript</h2>
+        {EXPERIENCE_CHAPTERS.map((ch) => (
+          <div key={ch.id}>
+            <h3>{ch.eyebrow || 'Chapter'}</h3>
+            <p>{ch.headline}</p>
+            {ch.body && <p>{ch.body}</p>}
+          </div>
+        ))}
+      </section>
+
+      {/* Actual loading state (dismissed once chapter 1 frames are in memory) */}
+      {!isLoaderDismissed && (
+        <ExperienceLoader 
+          loaded={Math.min(20, loadedCount)} 
+          total={20} // Require at least first 20 frames for startup
+        />
+      )}
+    </div>
+  );
+};
+
+export default CinematicExperience;

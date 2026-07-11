@@ -1,0 +1,115 @@
+.header {
+  width: 100%;
+  background-color: var(--color-kiln-black);
+  border-bottom: 1px solid var(--color-slate);
+  position: relative;
+  z-index: var(--z-nav);
+}
+
+.headerContainer {
+  max-width: var(--content-xl);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .headerContainer {
+    padding-inline: var(--space-10);
+  }
+}
+
+.logoLink {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-off-white);
+  line-height: var(--leading-tight);
+}
+
+.logoSubtext {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-clay);
+}
+
+.nav {
+  display: none; /* Hidden on mobile by default */
+}
+
+@media (min-width: 1024px) {
+  .nav {
+    display: block;
+  }
+}
+
+.navList {
+  display: flex;
+  list-style: none;
+  gap: var(--space-6);
+  padding: 0;
+}
+
+.navLink {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-sand-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+  padding-block: var(--space-2);
+  border-bottom: 1px solid transparent;
+}
+
+.navLink:hover {
+  color: var(--color-clay);
+}
+
+.activeLink {
+  color: var(--color-off-white);
+  border-color: var(--color-ember);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 3px;
+}
+
+.ctaGroup {
+  display: flex;
+  align-items: center;
+}
+
+.quoteBtn {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-kiln-black);
+  background-color: var(--color-ember);
+  border: 1px solid var(--color-ember);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.quoteBtn:hover {
+  background-color: transparent;
+  color: var(--color-ember);
+}
+
+.quoteBtn:focus-visible {
+  outline: 2px solid var(--color-off-white);
+  outline-offset: 3px;
+}

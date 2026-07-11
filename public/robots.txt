@@ -1,0 +1,21 @@
+# robots.txt for Maa Sita Int Udhyog
+# ==================================
+# Directives for crawlable bots
+
+User-agent: *
+Allow: /
+Allow: /brick
+Allow: /manufacturing
+Allow: /quality
+Allow: /infrastructure
+Allow: /about
+Allow: /contact
+Allow: /request-quote
+Allow: /privacy
+
+# Disallow API pathways
+Disallow: /api/
+Disallow: /_vercel/
+
+# Map sitemap location
+Sitemap: https://maasitaudhyog.com/sitemap.xml
