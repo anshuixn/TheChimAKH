@@ -5,6 +5,7 @@ import { ExperienceCanvas } from './ExperienceCanvas';
 import { ExperienceOverlay } from './ExperienceOverlay';
 import { ExperienceNavigation } from './ExperienceNavigation';
 import { ExperienceLoader } from './ExperienceLoader';
+import { EmberParticles } from './EmberParticles';
 import { EXPERIENCE_CHAPTERS } from './experience.config';
 import styles from './CinematicExperience.module.css';
 
@@ -104,6 +105,9 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
           cache={cache}
           totalFrames={totalFrames}
         />
+
+        {/* Ambient floating red/ember orbs system */}
+        <EmberParticles />
 
         {/* Copy overlays layer */}
         {isLoaderDismissed && (

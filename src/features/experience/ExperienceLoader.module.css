@@ -12,6 +12,8 @@
 }
 
 .loaderContent {
+  position: relative;
+  z-index: 2;
   text-align: center;
   max-width: var(--content-sm);
   padding: var(--space-6);

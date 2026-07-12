@@ -73,5 +73,10 @@ export function renderFrame(
     canvasHeight
   );
 
-  ctx.drawImage(frame, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+  try {
+    ctx.drawImage(frame, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+  } catch (err) {
+    // Gracefully catch browser canvas draw failures due to closed ImageBitmaps during unmount transitions
+    console.warn('[FrameRenderer] Failed to draw frame:', err);
+  }
 }

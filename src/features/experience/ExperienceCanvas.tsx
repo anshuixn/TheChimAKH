@@ -36,6 +36,11 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
       const canvasWidth = dimensions.width * dpr;
       const canvasHeight = dimensions.height * dpr;
 
+      if (typeof currentIndex !== 'number' || isNaN(currentIndex)) {
+        rafId = requestAnimationFrame(draw);
+        return;
+      }
+
       // Check if we actually need to render (index changed or dimensions changed)
       const indexChanged = currentIndex !== lastRenderedIndexRef.current;
       const sizeChanged = 

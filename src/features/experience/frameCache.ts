@@ -99,7 +99,9 @@ export class ProximityFrameCache {
   }
 
   public clear(): void {
-    for (const index of this.cache.keys()) {
+    // Clone keys first to avoid modifying the map size during iteration
+    const keys = Array.from(this.cache.keys());
+    for (const index of keys) {
       this.evictEntry(index);
     }
     this.cache.clear();

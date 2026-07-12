@@ -32,6 +32,9 @@ export function useExperienceProgress({ triggerRef }: ProgressHookOptions) {
         scrub: true,
         onUpdate: (self) => {
           const rawProgress = self.progress;
+          if (typeof rawProgress !== 'number' || isNaN(rawProgress)) {
+            return;
+          }
           const clamped = Math.max(0, Math.min(1, rawProgress));
           
           const { chapter: ch, frameIndex: fIndex } = getChapterAndFrameForProgress(clamped);
