@@ -70,19 +70,28 @@
 
 .ctaWrapper {
   margin-top: var(--space-6);
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.ctaButton {
+.ctaButton,
+.ctaButtonSecondary {
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-widest);
-  color: var(--color-kiln-black);
-  background-color: var(--color-ember);
-  border: 1px solid var(--color-ember);
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-sm);
   transition: all var(--duration-fast) var(--ease-out);
+  cursor: pointer;
+}
+
+.ctaButton {
+  color: var(--color-kiln-black);
+  background-color: var(--color-ember);
+  border: 1px solid var(--color-ember);
 }
 
 .ctaButton:hover {
@@ -90,7 +99,19 @@
   color: var(--color-ember);
 }
 
-.ctaButton:focus-visible {
+.ctaButtonSecondary {
+  color: var(--color-off-white);
+  background-color: transparent;
+  border: 1px solid var(--color-off-white);
+}
+
+.ctaButtonSecondary:hover {
+  background-color: var(--color-off-white);
+  color: var(--color-kiln-black);
+}
+
+.ctaButton:focus-visible,
+.ctaButtonSecondary:focus-visible {
   outline: 2px solid var(--color-off-white);
   outline-offset: 3px;
 }

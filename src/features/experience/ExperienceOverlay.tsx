@@ -6,12 +6,14 @@ interface ExperienceOverlayProps {
   currentChapter: ExperienceChapter;
   scrollProgress: number;
   onQuoteClick: () => void;
+  onExit: () => void;
 }
 
 export const ExperienceOverlay: React.FC<ExperienceOverlayProps> = ({
   currentChapter,
   scrollProgress,
   onQuoteClick,
+  onExit,
 }) => {
   const { start, end } = currentChapter.scrollRange;
   const range = end - start;
@@ -48,26 +50,35 @@ export const ExperienceOverlay: React.FC<ExperienceOverlayProps> = ({
           </span>
         )}
         <h2 className={styles.headline}>
-          {currentChapter.headline.split('\n').map((line, idx) => (
-            <React.Fragment key={idx}>
-              {line}
-              <br />
-            </React.Fragment>
-          ))}
+          {currentChapter.headline.split('\n').map((line, idx) => {
+            return (
+              <React.Fragment key={idx}>
+                {line}
+                <br />
+              </React.Fragment>
+            );
+          })}
         </h2>
         {currentChapter.body && (
           <p className={styles.bodyText}>{currentChapter.body}</p>
         )}
 
-        {/* Quote Request CTA on final chapter */}
+        {/* Quote Request and Exit CTA on final chapter */}
         {currentChapter.id === 'impact' && (
           <div className={styles.ctaWrapper}>
             <button 
               className={styles.ctaButton}
-              onClick={onQuoteClick}
+              onClick={() => { onQuoteClick(); }}
               aria-label="Request a custom brick quote"
             >
               REQUEST A QUOTE
+            </button>
+            <button 
+              className={styles.ctaButtonSecondary}
+              onClick={() => { onExit(); }}
+              aria-label="Continue to main website pages"
+            >
+              CONTINUE TO SITE &rarr;
             </button>
           </div>
         )}

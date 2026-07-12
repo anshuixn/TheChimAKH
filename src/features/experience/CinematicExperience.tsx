@@ -78,6 +78,18 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
     };
   }, [isLoaderDismissed]);
 
+  // Automatically transition to website when user scrolls to the end of the cinematic experience
+  useEffect(() => {
+    if (progress >= 0.99) {
+      const timer = setTimeout(() => {
+        onExit();
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [progress, onExit]);
+
   return (
     <div 
       className={styles.scrollWrapper} 
@@ -99,6 +111,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
             currentChapter={chapter}
             scrollProgress={progress}
             onQuoteClick={onQuoteClick}
+            onExit={onExit}
           />
         )}
 

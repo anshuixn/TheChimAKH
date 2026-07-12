@@ -1,7 +1,19 @@
+@keyframes fadeInContainer {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .homeContainer {
   background-color: var(--color-kiln-black);
   color: var(--color-off-white);
   min-height: 100vh;
+  animation: fadeInContainer 1s var(--ease-out) both;
 }
 
 .container {
