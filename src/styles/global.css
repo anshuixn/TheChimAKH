@@ -16,6 +16,7 @@ html {
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 100%; /* 16px base, respects user preference */
+  overflow-x: hidden;
 }
 
 body {
@@ -25,6 +26,7 @@ body {
   font-size: var(--text-base);
   font-weight: var(--weight-regular);
   line-height: var(--leading-normal);
+  overflow-x: hidden;
 }
 
 /* ── Skip link ────────────────────────────────────────────── */
@@ -191,7 +193,6 @@ textarea::placeholder {
     }
   }
 }
-
 /* ── Image-specific Scroll Reveal ─────────────────────────── */
 
 .scroll-reveal-img {
@@ -204,15 +205,9 @@ textarea::placeholder {
   will-change: opacity, transform, filter;
 }
 
-@media (max-width: 768px) {
-  .scroll-reveal-img {
-    transform: translateY(30px) scale(0.98);
-  }
-}
-
 .scroll-reveal-img.reveal-visible {
   opacity: 1;
-  transform: translateX(0) scale(1) translateY(0);
+  transform: translateX(0) scale(1);
   filter: blur(0px);
 }
 
@@ -229,21 +224,6 @@ textarea::placeholder {
         opacity: 1;
         transform: translateX(0) scale(1);
         filter: blur(0px);
-      }
-    }
-
-    @media (max-width: 768px) {
-      @keyframes reveal-img-in {
-        from {
-          opacity: 0;
-          transform: translateY(30px) scale(0.98);
-          filter: blur(4px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-          filter: blur(0px);
-        }
       }
     }
 
