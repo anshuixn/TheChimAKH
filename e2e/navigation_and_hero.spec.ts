@@ -98,36 +98,32 @@ test.describe('Responsive Navigation & Mobile Drawer (Workstream B & H1)', () =>
   });
 });
 
-test.describe('Hero Transition Geometry & Animations (Workstream D & H2)', () => {
+test.describe('Hero Transition & Animations (Workstream D & H2)', () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
   });
 
-  test('Hero transition state flow and DOM scaling transformations', async ({ page, isMobile }) => {
+  test('Hero transition state flow — shutter exit and cinematic handoff', async ({ page, isMobile }) => {
     // Cinematic transition is skipped in mobile emulation profiles
     test.skip(isMobile, 'Cinematic transitions are disabled on mobile devices');
 
     await page.goto('/');
-    
+
     // Desktop starts on ENTRY page
     await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'entry-idle');
 
     const enterBtn = page.locator('button:has-text("ENTER EXPERIENCE")');
     await expect(enterBtn).toBeVisible();
 
-    // Trigger transition zoom
+    // Trigger the shutter-close transition
     await enterBtn.click();
-    
-    // Instantly check entering status attribute on body
+
+    // Body attribute must immediately switch to transition-entering
     await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'transition-entering');
 
-    // Bounding box of the zoom targets must have transform calculations applied
-    const posterImg = page.locator('img[src="/experience/posters/poster-entrance.png"]');
-    await expect(posterImg).toHaveClass(/posterImageZoomed/);
-
-    // After scale finishes, it progresses into cinematic rendering states (loading / ready)
-    // We use standard regex checks to automatically await the status change cleanly
-    // A 10s timeout is used to cover the 1.5s idle pre-delay and sequential local frame loading
+    // After shutter closes, it progresses into cinematic rendering states (loading / ready).
+    // 10s timeout covers the ~1.25s exit animation + 1.5s initial preload window.
     await expect(page.locator('body')).toHaveAttribute('data-experience-state', /cinematic-loading|cinematic-ready/, { timeout: 10000 });
   });
 });
+

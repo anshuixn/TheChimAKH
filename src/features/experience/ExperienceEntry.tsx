@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { calculateZoomGeometry } from './calculateZoomGeometry';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './ExperienceEntry.module.css';
 
 interface ExperienceEntryProps {
   onEnter: () => void;
   onSkip: () => void;
   isLoading: boolean;
-  loadProgress: number; // 0 to 180 (actual count loaded)
-  totalToLoad: number; // e.g., 20 or 180
+  loadProgress: number;
+  totalToLoad: number;
 }
 
 export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
@@ -18,70 +17,96 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
   totalToLoad,
 }) => {
   const percent = Math.min(100, Math.round((loadProgress / totalToLoad) * 100));
-  
-  const [isZooming, setIsZooming] = useState(false);
-  const [geometry, setGeometry] = useState({ scale: 1, translateX: 0, translateY: 0 });
 
-  // Update data-experience-state on mount/unmount or state changes
+  const [isExiting, setIsExiting] = useState(false);
+  const [showShutter, setShowShutter] = useState(false);
+  const shutterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Sync data-experience-state body attribute
   useEffect(() => {
-    if (isZooming) {
+    if (isExiting) {
       document.body.setAttribute('data-experience-state', 'transition-entering');
     } else {
       document.body.setAttribute('data-experience-state', 'entry-idle');
     }
     return () => {
-      // Cleanup attribute on unmount
       document.body.removeAttribute('data-experience-state');
     };
-  }, [isZooming]);
+  }, [isExiting]);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (shutterTimer.current) clearTimeout(shutterTimer.current);
+    };
+  }, []);
 
   const handleEnterClick = () => {
-    // Check prefers-reduced-motion first
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
-      // Skip transition completely
       onEnter();
       return;
     }
 
-    // Calculate affine zoom coordinates based on current window dimensions
-    const geo = calculateZoomGeometry(
-      window.innerWidth,
-      window.innerHeight,
-      window.innerWidth,
-      window.innerHeight,
-      0,
-      0,
-      1.15 // 15% visual overscan
-    );
-    setGeometry(geo);
-    setIsZooming(true);
+    setIsExiting(true);
 
-    // Delay the completion trigger to match the CSS animation duration (1.5s)
-    setTimeout(() => {
-      onEnter();
-    }, 1500);
+    // Step 1: content fades out over 0.8s
+    // Step 2: shutter panel slams closed (0.7s, starts at 0.5s)
+    shutterTimer.current = setTimeout(() => {
+      setShowShutter(true);
+      // Step 3: hand off to parent after shutter completes
+      shutterTimer.current = setTimeout(() => {
+        onEnter();
+      }, 750);
+    }, 500);
   };
 
   return (
     <div className={styles.entryContainer} role="region" aria-label="Entrance Screen">
-      {/* Redesigned absolute visual layer with img tag */}
+
+      {/* ── Background poster ────────────────────────────── */}
       <div className={styles.visualLayer}>
         <img
           src="/experience/posters/poster-entrance.png"
-          className={`${styles.posterImage} ${isZooming ? styles.posterImageZoomed : ''}`}
+          className={styles.posterImage}
           alt=""
-          style={{
-            '--zoom-tx': `${String(geometry.translateX)}px`,
-            '--zoom-ty': `${String(geometry.translateY)}px`,
-            '--zoom-scale': String(geometry.scale),
-          } as React.CSSProperties}
+          aria-hidden="true"
         />
+        {/* Horizontal wipe mask that reveals the poster left-to-right */}
+        <div className={styles.wipeMask} aria-hidden="true" />
+        {/* Vignette darkens edges */}
+        <div className={styles.vignette} aria-hidden="true" />
+        {/* Film grain */}
+        <div className={styles.grainOverlay} aria-hidden="true" />
       </div>
 
-      <div className={`${styles.content} ${isZooming ? styles.contentFading : ''}`}>
+      {/* ── Cinematic letter-box bars ─────────────────────── */}
+      <div className={styles.letterboxTop}  aria-hidden="true" />
+      <div className={styles.letterboxBottom} aria-hidden="true" />
+
+      {/* ── Ember dust particles ──────────────────────────── */}
+      <div className={styles.particles} aria-hidden="true">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <span key={i} className={styles.particle} />
+        ))}
+      </div>
+
+      {/* ── Main content ─────────────────────────────────── */}
+      <div className={`${styles.content} ${isExiting ? styles.contentExiting : ''}`}>
         <header className={styles.header}>
-          <h1 className={styles.title}>MAA SITA INT UDHYOG</h1>
+          {/* Eyebrow label */}
+          <span className={styles.eyebrow}>Est. — Premium Fired Clay</span>
+
+          {/* Title split into animatable word spans */}
+          <h1>
+            <span className={styles.titleLine} aria-label="MAA SITA INT UDHYOG">
+              <span className={styles.titleWord}>MAA</span>
+              <span className={styles.titleWord}>SITA</span>
+              <span className={styles.titleWord}>INT UDHYOG</span>
+            </span>
+          </h1>
+
+          {/* Tagline */}
           <p className={styles.tagline}>
             <span>BUILT FROM EARTH.</span>
             <span className={styles.divider}>•</span>
@@ -89,13 +114,17 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
           </p>
         </header>
 
+        {/* Decorative ember rule */}
+        <div className={styles.rule} aria-hidden="true" />
+
+        {/* CTA */}
         <div className={styles.ctaGroup}>
           {!isLoading ? (
             <>
               <button
                 className={styles.enterBtn}
                 onClick={handleEnterClick}
-                disabled={isZooming}
+                disabled={isExiting}
                 aria-label="Enter the cinematic scroll storytelling experience"
               >
                 ENTER EXPERIENCE
@@ -103,7 +132,7 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
               <button
                 className={styles.skipBtn}
                 onClick={onSkip}
-                disabled={isZooming}
+                disabled={isExiting}
                 aria-label="Skip cinematic experience and go directly to main website content"
               >
                 SKIP TO WEBSITE
@@ -112,18 +141,23 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
           ) : (
             <div className={styles.loaderContainer} aria-live="polite">
               <div className={styles.progressTrack}>
-                <div 
-                  className={styles.progressBar} 
+                <div
+                  className={styles.progressBar}
                   style={{ width: `${String(percent)}%` }}
                 />
               </div>
               <p className={styles.progressText}>
-                LOADING EXPERIENTIAL CHANNELS &mdash; {loadProgress} / {totalToLoad} FRAMES ({percent}%)
+                LOADING EXPERIENTIAL CHANNELS &mdash; {loadProgress}&thinsp;/&thinsp;{totalToLoad} FRAMES ({percent}%)
               </p>
             </div>
           )}
         </div>
       </div>
+
+      {/* ── Shutter exit overlay ──────────────────────────── */}
+      {showShutter && (
+        <div className={`${styles.shutterPanel} ${styles.shutterPanelActive}`} aria-hidden="true" />
+      )}
     </div>
   );
 };
