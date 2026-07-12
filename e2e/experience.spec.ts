@@ -42,7 +42,8 @@ test.describe('Maa Sita Int Udhyog E2E Suite', () => {
     const continueBtn = page.locator('button:has-text("CONTINUE TO FULL SITE")');
 
     if (await skipBtn.isVisible()) {
-      const entryTitle = page.locator('h1:has-text("MAA SITA")');
+      // Title is split into animated word spans — check the containing h1 via aria-label
+      const entryTitle = page.locator('[aria-label="MAA SITA INT UDHYOG"]');
       await expect(entryTitle).toBeVisible();
       const enterBtn = page.locator('button:has-text("ENTER EXPERIENCE")');
       await expect(enterBtn).toBeVisible();
