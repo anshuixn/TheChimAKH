@@ -1,3 +1,9 @@
+.experienceContainer {
+  position: relative;
+  width: 100%;
+  background-color: var(--color-kiln-black);
+}
+
 .scrollWrapper {
   position: relative;
   width: 100%;

@@ -18,7 +18,10 @@ export function useExperienceProgress({ triggerRef }: ProgressHookOptions) {
   // Store trigger settings as refs to programmatic jump/scrolling
   const scrollTriggerInstanceRef = useRef<globalThis.ScrollTrigger | null>(null);
 
+  const isMountedRef = useRef(true);
+
   useEffect(() => {
+    isMountedRef.current = true;
     const triggerElement = triggerRef.current;
     if (!triggerElement) return;
 
@@ -31,6 +34,7 @@ export function useExperienceProgress({ triggerRef }: ProgressHookOptions) {
         pin: true,
         scrub: true,
         onUpdate: (self) => {
+          if (!isMountedRef.current) return;
           const rawProgress = self.progress;
           if (typeof rawProgress !== 'number' || isNaN(rawProgress)) {
             return;
@@ -47,6 +51,7 @@ export function useExperienceProgress({ triggerRef }: ProgressHookOptions) {
     });
 
     return () => {
+      isMountedRef.current = false;
       ctx.revert(); // Reverts all GSAP animations and kills ScrollTriggers
       scrollTriggerInstanceRef.current = null;
     };

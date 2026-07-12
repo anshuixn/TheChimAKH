@@ -81,69 +81,66 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   // Automatically transition to website when user scrolls to the end of the cinematic experience
   useEffect(() => {
     if (progress >= 0.99) {
-      const timer = setTimeout(() => {
-        onExit();
-      }, 1000);
-      return () => {
-        clearTimeout(timer);
-      };
+      onExit();
     }
   }, [progress, onExit]);
 
   return (
-    <div 
-      className={styles.scrollWrapper} 
-      ref={triggerRef}
-      role="region"
-      aria-label="Cinematic experiential journey of Maa Sita bricks"
-    >
-      {/* Visual Canvas sequence layer */}
-      <div className={styles.canvasStickyContainer}>
-        <ExperienceCanvas 
-          currentIndex={frameIndex}
-          cache={cache}
-          totalFrames={totalFrames}
-        />
-
-        {/* Copy overlays layer */}
-        {isLoaderDismissed && (
-          <ExperienceOverlay 
-            currentChapter={chapter}
-            scrollProgress={progress}
-            onQuoteClick={onQuoteClick}
-            onExit={onExit}
+    <div className={styles.experienceContainer}>
+      <div 
+        className={styles.scrollWrapper} 
+        ref={triggerRef}
+        role="region"
+        aria-label="Cinematic experiential journey of Maa Sita bricks"
+      >
+        {/* Visual Canvas sequence layer */}
+        <div className={styles.canvasStickyContainer}>
+          <ExperienceCanvas 
+            currentIndex={frameIndex}
+            cache={cache}
+            totalFrames={totalFrames}
           />
-        )}
 
-        {/* Cinematic controls overlay */}
-        {isLoaderDismissed && (
-          <ExperienceNavigation 
-            currentChapter={chapter}
-            onDotClick={scrollToChapter}
-            onExit={onExit}
+          {/* Copy overlays layer */}
+          {isLoaderDismissed && (
+            <ExperienceOverlay 
+              currentChapter={chapter}
+              scrollProgress={progress}
+              onQuoteClick={onQuoteClick}
+              onExit={onExit}
+            />
+          )}
+
+          {/* Cinematic controls overlay */}
+          {isLoaderDismissed && (
+            <ExperienceNavigation 
+              currentChapter={chapter}
+              onDotClick={scrollToChapter}
+              onExit={onExit}
+            />
+          )}
+        </div>
+
+        {/* Visually hidden screen reader narrative content */}
+        <section className="sr-only">
+          <h2>Brand Journey Transcript</h2>
+          {EXPERIENCE_CHAPTERS.map((ch) => (
+            <div key={ch.id}>
+              <h3>{ch.eyebrow || 'Chapter'}</h3>
+              <p>{ch.headline}</p>
+              {ch.body && <p>{ch.body}</p>}
+            </div>
+          ))}
+        </section>
+
+        {/* Actual loading state (dismissed once chapter 1 frames are in memory) */}
+        {!isLoaderDismissed && (
+          <ExperienceLoader 
+            loaded={Math.min(20, loadedCount)} 
+            total={20} // Require at least first 20 frames for startup
           />
         )}
       </div>
-
-      {/* Visually hidden screen reader narrative content */}
-      <section className="sr-only">
-        <h2>Brand Journey Transcript</h2>
-        {EXPERIENCE_CHAPTERS.map((ch) => (
-          <div key={ch.id}>
-            <h3>{ch.eyebrow || 'Chapter'}</h3>
-            <p>{ch.headline}</p>
-            {ch.body && <p>{ch.body}</p>}
-          </div>
-        ))}
-      </section>
-
-      {/* Actual loading state (dismissed once chapter 1 frames are in memory) */}
-      {!isLoaderDismissed && (
-        <ExperienceLoader 
-          loaded={Math.min(20, loadedCount)} 
-          total={20} // Require at least first 20 frames for startup
-        />
-      )}
     </div>
   );
 };

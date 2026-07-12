@@ -203,6 +203,7 @@ export const Home: React.FC = () => {
   };
 
   const handleExitExperience = () => {
+    window.scrollTo(0, 0);
     setState('SEMANTIC_HOME');
   };
 
