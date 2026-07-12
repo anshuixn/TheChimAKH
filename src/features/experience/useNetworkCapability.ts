@@ -45,9 +45,19 @@ export function useNetworkCapability(): NetworkTier {
       }
     }
 
-    connection.addEventListener('change', updateConnectionStatus);
+    const hasAddListener = typeof connection.addEventListener === 'function';
+    if (hasAddListener) {
+      connection.addEventListener('change', updateConnectionStatus);
+    } else if ('onchange' in connection) {
+      (connection as unknown as { onchange: () => void }).onchange = updateConnectionStatus;
+    }
+
     return () => {
-      connection.removeEventListener('change', updateConnectionStatus);
+      if (hasAddListener) {
+        connection.removeEventListener('change', updateConnectionStatus);
+      } else if ('onchange' in connection) {
+        (connection as unknown as { onchange: null }).onchange = null;
+      }
     };
   }, []);
 
