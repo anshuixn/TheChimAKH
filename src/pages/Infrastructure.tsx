@@ -94,7 +94,7 @@ export const Infrastructure: React.FC = () => {
               </a>
             </div>
             
-            <div className={styles.imageWrapper}>
+            <div className={`${styles.imageWrapper} scroll-reveal-img`}>
               <img
                 src="/images/kiln_infrastructure.png"
                 alt="Central high-volume chimney infrastructure campus showing logistics flatbeds loading bricks."

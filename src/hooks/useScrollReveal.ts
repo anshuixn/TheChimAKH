@@ -32,7 +32,7 @@ export function useScrollReveal(dependency?: unknown) {
       }
     );
 
-    const elements = document.querySelectorAll('.scroll-reveal');
+    const elements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-img');
     elements.forEach((el) => { observer.observe(el); });
 
     return () => {

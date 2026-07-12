@@ -77,7 +77,7 @@ export const Quality: React.FC = () => {
               </a>
             </div>
             
-            <div className={styles.imageWrapper}>
+            <div className={`${styles.imageWrapper} scroll-reveal-img`}>
               <img
                 src="/images/quality_testing.png"
                 alt="Materials laboratory testing Maa Sita bricks under dynamic hydraulic compressive crush tests."

@@ -60,7 +60,7 @@ export const Brick: React.FC = () => {
               </table>
             </div>
 
-            <div className={styles.productImageWrapper}>
+            <div className={`${styles.productImageWrapper} scroll-reveal-img`}>
               <img
                 src="/images/brick_product_detail.png"
                 alt="Macro close-up of a premium Maa Sita red clay structural brick displaying rich texture and consistent dimensions."

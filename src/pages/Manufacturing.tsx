@@ -89,7 +89,7 @@ export const Manufacturing: React.FC = () => {
               </a>
             </div>
             
-            <div className={styles.imageWrapper}>
+            <div className={`${styles.imageWrapper} scroll-reveal-img`}>
               <img
                 src="/images/manufacturing_kiln.png"
                 alt="Continuous coal-fired brick kiln glowing chambers firing clay bricks at uniform high temperatures."

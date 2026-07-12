@@ -51,7 +51,7 @@ export const About: React.FC = () => {
               </p>
             </div>
 
-            <div className={styles.imageWrapper}>
+            <div className={`${styles.imageWrapper} scroll-reveal-img`}>
               <img
                 src="/images/about_heritage.png"
                 alt="Traditional wooden moulding trays and raw alluvial clay soil weathering in the sun."
