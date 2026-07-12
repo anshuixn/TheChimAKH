@@ -56,6 +56,7 @@ export const Home: React.FC = () => {
   // Automatically advance to CINEMATIC state when preload is complete and user has clicked enter
   useEffect(() => {
     if (state === 'ENTRY' && isPreloadActive && preloadProgress >= 20) {
+      /* eslint-disable-next-line react-hooks/set-state-in-effect */
       setState('CINEMATIC');
     }
   }, [state, isPreloadActive, preloadProgress]);

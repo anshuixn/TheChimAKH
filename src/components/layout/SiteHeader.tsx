@@ -38,6 +38,7 @@ export const SiteHeader: React.FC = () => {
 
   // Auto-close drawer on route navigation
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
     setIsOpen(false);
   }, [location.pathname]);
 

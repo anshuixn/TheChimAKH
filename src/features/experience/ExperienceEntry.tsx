@@ -72,8 +72,8 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
           className={`${styles.posterImage} ${isZooming ? styles.posterImageZoomed : ''}`}
           alt=""
           style={{
-            '--zoom-tx': `${geometry.translateX}px`,
-            '--zoom-ty': `${geometry.translateY}px`,
+            '--zoom-tx': `${String(geometry.translateX)}px`,
+            '--zoom-ty': `${String(geometry.translateY)}px`,
             '--zoom-scale': String(geometry.scale),
           } as React.CSSProperties}
         />
