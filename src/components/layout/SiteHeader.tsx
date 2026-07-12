@@ -25,6 +25,7 @@ export const SiteHeader: React.FC = () => {
   // Active section tracking via IntersectionObserver
   useEffect(() => {
     if (location.pathname !== '/') return;
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
 
     const sections = navItems
       .map((item) => document.getElementById(item.hash))

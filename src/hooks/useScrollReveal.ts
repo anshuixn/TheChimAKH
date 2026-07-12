@@ -3,7 +3,16 @@ import { useEffect } from 'react';
 export function useScrollReveal(dependency?: unknown) {
   useEffect(() => {
     // Feature detect scroll-driven animations; if supported natively in CSS, let CSS handle it.
-    if (typeof window !== 'undefined' && CSS.supports('(animation-timeline: view()) and (animation-range: entry)')) {
+    if (
+      typeof window !== 'undefined' &&
+      typeof CSS !== 'undefined' &&
+      typeof CSS.supports === 'function' &&
+      CSS.supports('(animation-timeline: view()) and (animation-range: entry)')
+    ) {
+      return;
+    }
+
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
       return;
     }
 
