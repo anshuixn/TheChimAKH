@@ -31,14 +31,7 @@ export function useDeviceCapability(): DeviceTier {
         return;
       }
 
-      // 4. Viewport width check (Initial mobile/tablet strategy: forced to static fallback)
-      const width = window.innerWidth;
-      if (width < 1024) {
-        setTier('static');
-        return;
-      }
-
-      // 5. Network-based tier selection (Load-time policy)
+      // 4. Network-based tier selection (Load-time policy)
       if (networkTier === 'low') {
         setTier('static');
         return;

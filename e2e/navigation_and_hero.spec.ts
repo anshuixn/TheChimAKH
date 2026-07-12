@@ -103,13 +103,10 @@ test.describe('Hero Transition & Animations (Workstream D & H2)', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
   });
 
-  test('Hero transition state flow — shutter exit and cinematic handoff', async ({ page, isMobile }) => {
-    // Cinematic transition is skipped in mobile emulation profiles
-    test.skip(isMobile, 'Cinematic transitions are disabled on mobile devices');
-
+  test('Hero transition state flow — shutter exit and cinematic handoff', async ({ page }) => {
     await page.goto('/');
 
-    // Desktop starts on ENTRY page
+    // Page starts with the entry intro screen
     await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'entry-idle');
 
     const enterBtn = page.locator('button:has-text("ENTER EXPERIENCE")');
