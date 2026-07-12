@@ -22,7 +22,13 @@ export const Home: React.FC = () => {
   const location = useLocation();
   const deviceTier = useDeviceCapability();
 
-  const [state, setState] = useState<HomeState>('ENTRY');
+  const [state, setState] = useState<HomeState>(() => {
+    // If deep-linked to a hash section directly on load, bypass the cinematic intro
+    if (typeof window !== 'undefined' && window.location.hash) {
+      return 'SEMANTIC_HOME';
+    }
+    return 'ENTRY';
+  });
 
   // Trigger fallback scroll reveal observer
   useScrollReveal(state);
@@ -189,7 +195,10 @@ export const Home: React.FC = () => {
     setState('CINEMATIC');
   };
 
-  const handleSkipExperience = () => {
+  const handleSkipExperience = (hash?: string) => {
+    if (hash) {
+      window.location.hash = hash;
+    }
     setState('SEMANTIC_HOME');
   };
 

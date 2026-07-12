@@ -259,3 +259,11 @@
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
+
+/* Hide main site header during entry and cinematic states */
+:global(body[data-experience-state="entry-idle"]) .header,
+:global(body[data-experience-state="transition-entering"]) .header,
+:global(body[data-experience-state="cinematic-loading"]) .header,
+:global(body[data-experience-state="cinematic-ready"]) .header {
+  display: none !important;
+}

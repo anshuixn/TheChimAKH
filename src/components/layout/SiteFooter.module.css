@@ -186,3 +186,11 @@
   outline: 2px solid var(--color-ember);
   outline-offset: 3px;
 }
+
+/* Hide main site footer during entry and cinematic states */
+:global(body[data-experience-state="entry-idle"]) .footer,
+:global(body[data-experience-state="transition-entering"]) .footer,
+:global(body[data-experience-state="cinematic-loading"]) .footer,
+:global(body[data-experience-state="cinematic-ready"]) .footer {
+  display: none !important;
+}

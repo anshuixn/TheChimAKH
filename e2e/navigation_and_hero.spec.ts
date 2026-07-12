@@ -31,13 +31,13 @@ test.describe('Responsive Navigation & Mobile Drawer (Workstream B & H1)', () =>
       await page.goto('/');
       await page.waitForTimeout(500);
 
-      // Mobile viewports immediately direct to STATIC_FALLBACK page (since < 1024px)
-      await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'static-fallback-ready');
+      // Landing page entrance screen is active on mobile as well
+      await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'entry-idle');
 
-      // Click "CONTINUE TO FULL SITE" to get to main home page
-      const continueBtn = page.locator('button:has-text("CONTINUE TO FULL SITE")');
-      await expect(continueBtn).toBeVisible();
-      await continueBtn.click();
+      // Click "SKIP TO WEBSITE" to get to main home page
+      const skipBtn = page.locator('button:has-text("SKIP TO WEBSITE")');
+      await expect(skipBtn).toBeVisible();
+      await skipBtn.click();
       await expect(page.locator('body')).toHaveAttribute('data-experience-state', 'idle');
 
       // 1. Hamburger button should be visible
