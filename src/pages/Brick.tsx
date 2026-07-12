@@ -28,9 +28,21 @@ export const Brick: React.FC = () => {
       {/* Header section */}
       <header className={styles.pageHeader}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>OUR PRIMARY PRODUCT</span>
-          <h1 className={styles.title}>{RED_CLAY_BRICK.name}</h1>
-          <p className={styles.description}>{RED_CLAY_BRICK.description}</p>
+          <div className={styles.headerGrid}>
+            <div>
+              <span className={styles.eyebrow}>OUR PRIMARY PRODUCT</span>
+              <h1 className={styles.title}>{RED_CLAY_BRICK.name}</h1>
+              <p className={styles.description}>{RED_CLAY_BRICK.description}</p>
+            </div>
+            <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
+              <img 
+                src="/images/brick_header.png" 
+                alt="Stack of traditional red clay structural bricks under warm golden sunlight." 
+                className={styles.headerImage}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </header>
 

@@ -38,11 +38,23 @@ export const Quality: React.FC = () => {
     <article className={styles.pageContainer}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>TESTED INTEGRITY</span>
-          <h1 className={styles.title}>STANDARDS WE UPHOLD</h1>
-          <p className={styles.description}>
-            We verify our brick batches against strict Indian Standard (IS) specifications, assuring structural safety, weathering resilience, and high density.
-          </p>
+          <div className={styles.headerGrid}>
+            <div>
+              <span className={styles.eyebrow}>TESTED INTEGRITY</span>
+              <h1 className={styles.title}>STANDARDS WE UPHOLD</h1>
+              <p className={styles.description}>
+                We verify our brick batches against strict Indian Standard (IS) specifications, assuring structural safety, weathering resilience, and high density.
+              </p>
+            </div>
+            <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
+              <img 
+                src="/images/quality_header.png" 
+                alt="Hydraulic compressive crush testing machine checking brick strength thresholds." 
+                className={styles.headerImage}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </header>
 

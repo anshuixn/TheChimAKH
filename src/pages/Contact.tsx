@@ -16,11 +16,23 @@ export const Contact: React.FC = () => {
     <article className={styles.pageContainer}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>COMMUNICATION DESK</span>
-          <h1 className={styles.title}>CONNECT WITH OUR TEAM</h1>
-          <p className={styles.description}>
-            Have questions about brick grades, testing certifications, or custom batch orders? Transmit your query securely through our central communications pipeline.
-          </p>
+          <div className={styles.headerGrid}>
+            <div>
+              <span className={styles.eyebrow}>COMMUNICATION DESK</span>
+              <h1 className={styles.title}>CONNECT WITH OUR TEAM</h1>
+              <p className={styles.description}>
+                Have questions about brick grades, testing certifications, or custom batch orders? Transmit your query securely through our central communications pipeline.
+              </p>
+            </div>
+            <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
+              <img 
+                src="/images/contact_header.png" 
+                alt="Architect workspace with blueprints and building designs representing client project consulting." 
+                className={styles.headerImage}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </header>
 

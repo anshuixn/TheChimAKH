@@ -48,11 +48,23 @@ export const Manufacturing: React.FC = () => {
     <article className={styles.pageContainer}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>MANUFACTURING CRAFT</span>
-          <h1 className={styles.title}>FIRED BY PRECISION</h1>
-          <p className={styles.description}>
-            Our brick manufacturing process combines traditional clay weathering techniques with strict control over continuous kiln temperatures, delivering highly durable construction bricks.
-          </p>
+          <div className={styles.headerGrid}>
+            <div>
+              <span className={styles.eyebrow}>MANUFACTURING CRAFT</span>
+              <h1 className={styles.title}>FIRED BY PRECISION</h1>
+              <p className={styles.description}>
+                Our brick manufacturing process combines traditional clay weathering techniques with strict control over continuous kiln temperatures, delivering highly durable construction bricks.
+              </p>
+            </div>
+            <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
+              <img 
+                src="/images/manufacturing_header.png" 
+                alt="Continuous industrial kiln chamber glowing with uniform fire temperatures vitrifying bricks." 
+                className={styles.headerImage}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </header>
 

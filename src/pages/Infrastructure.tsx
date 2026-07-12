@@ -15,11 +15,23 @@ export const Infrastructure: React.FC = () => {
     <article className={styles.pageContainer}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>INDUSTRIAL FOOTPRINT</span>
-          <h1 className={styles.title}>HIGH-VOLUME INFRASTRUCTURE</h1>
-          <p className={styles.description}>
-            Our manufacturing complex operates large-scale industrial facilities to secure continuous volume production. Explore our kiln infrastructure, stocking capabilities, and shipping routes.
-          </p>
+          <div className={styles.headerGrid}>
+            <div>
+              <span className={styles.eyebrow}>INDUSTRIAL FOOTPRINT</span>
+              <h1 className={styles.title}>HIGH-VOLUME INFRASTRUCTURE</h1>
+              <p className={styles.description}>
+                Our manufacturing complex operates large-scale industrial facilities to secure continuous volume production. Explore our kiln infrastructure, stocking capabilities, and shipping routes.
+              </p>
+            </div>
+            <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
+              <img 
+                src="/images/infrastructure_header.png" 
+                alt="Large industrial brick plant chimney complex with active pallet logistics flatbeds." 
+                className={styles.headerImage}
+                loading="eager"
+              />
+            </div>
+          </div>
         </div>
       </header>
 
