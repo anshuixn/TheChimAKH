@@ -137,8 +137,16 @@ export const Home: React.FC = () => {
           // Fetch and decode frame into browser memory cache
           const img = new Image();
           img.src = url;
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => {
+              if (typeof img.decode === 'function') {
+                img.decode()
+                  .then(() => { resolve(); })
+                  .catch(() => { resolve(); });
+              } else {
+                resolve();
+              }
+            };
             img.onerror = reject;
             controller.signal.addEventListener('abort', () => { reject(new Error('Aborted')); });
           });

@@ -89,8 +89,26 @@ export function useFramePreloader({
         return;
       }
 
+      // Abort active requests that are now too far from current index to yield connection pool slots
+      const maxKeepDistance = 15;
+      const toAbort: number[] = [];
+      activeRequestsRef.current.forEach((_, idx) => {
+        if (Math.abs(idx - currentIndex) > maxKeepDistance) {
+          toAbort.push(idx);
+        }
+      });
+      toAbort.forEach((idx) => {
+        const controller = activeRequestsRef.current.get(idx);
+        if (controller) {
+          controller.abort();
+          activeRequestsRef.current.delete(idx);
+        }
+      });
+
       const queue = getLoadPriorities();
-      if (queue.length === 0) return;
+      if (queue.length === 0) {
+        return;
+      }
 
       // Limit concurrent loads based on capability
       const maxConcurrent = networkTier === 'high' ? 4 : 2;

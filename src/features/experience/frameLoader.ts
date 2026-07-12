@@ -75,7 +75,17 @@ export async function loadFrame(
 
     img.onload = () => {
       cleanup();
-      resolve(img);
+      if (typeof img.decode === 'function') {
+        img.decode()
+          .then(() => {
+            resolve(img);
+          })
+          .catch(() => {
+            resolve(img); // Resolve anyway if decode fails
+          });
+      } else {
+        resolve(img);
+      }
     };
 
     img.onerror = () => {
