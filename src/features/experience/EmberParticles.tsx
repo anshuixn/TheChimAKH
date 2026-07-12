@@ -27,6 +27,11 @@ export const EmberParticles: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    interface EmberColor {
+      solid: string;
+      rgbaPrefix: string;
+    }
+
     // Particle representation
     interface Particle {
       x: number;
@@ -35,17 +40,17 @@ export const EmberParticles: React.FC = () => {
       speedY: number;
       speedX: number;
       opacity: number;
-      color: string;
+      color: EmberColor;
       wobble: number;
       wobbleSpeed: number;
     }
 
     const particles: Particle[] = [];
-    const colors = [
-      'rgba(212, 98, 42, ',  // Ember orange (#D4622A)
-      'rgba(181, 83, 60, ',  // Clay red (#B5533C)
-      'rgba(245, 158, 11, ', // Amber gold (#F59E0B)
-      'rgba(239, 68, 68, ',  // Red (#EF4444)
+    const colors: EmberColor[] = [
+      { solid: 'rgb(212, 98, 42)', rgbaPrefix: 'rgba(212, 98, 42,' },
+      { solid: 'rgb(181, 83, 60)', rgbaPrefix: 'rgba(181, 83, 60,' },
+      { solid: 'rgb(245, 158, 11)', rgbaPrefix: 'rgba(245, 158, 11,' },
+      { solid: 'rgb(239, 68, 68)', rgbaPrefix: 'rgba(239, 68, 68,' },
     ];
 
     const createParticle = (isInitial = false): Particle => {
@@ -95,8 +100,8 @@ export const EmberParticles: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         
         ctx.shadowBlur = p.size * 1.5;
-        ctx.shadowColor = p.color.replace(', ', ')');
-        ctx.fillStyle = `${p.color}${String(currentOpacity)})`;
+        ctx.shadowColor = p.color.solid;
+        ctx.fillStyle = `${p.color.rgbaPrefix}${currentOpacity.toFixed(3)})`;
         ctx.fill();
 
         // Recycle particle if it goes off screen (top or sides)
