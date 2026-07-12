@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { EmberParticles } from './EmberParticles';
 import styles from './ExperienceEntry.module.css';
 
 interface ExperienceEntryProps {
@@ -81,6 +82,8 @@ export const ExperienceEntry: React.FC<ExperienceEntryProps> = ({
           alt="Majestic Maa Sita brick kiln chimney rising against sunset clouds"
           aria-hidden="true"
         />
+        {/* Ambient floating red/ember orbs particles */}
+        <EmberParticles />
         {/* Vignette darkens edges */}
         <div className={styles.vignette} aria-hidden="true" />
         {/* Film grain */}

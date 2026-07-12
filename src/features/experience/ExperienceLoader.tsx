@@ -1,5 +1,4 @@
 import React from 'react';
-import { EmberParticles } from './EmberParticles';
 import styles from './ExperienceLoader.module.css';
 
 interface ExperienceLoaderProps {
@@ -12,9 +11,6 @@ export const ExperienceLoader: React.FC<ExperienceLoaderProps> = ({ loaded, tota
 
   return (
     <div className={styles.loaderWrapper} role="status" aria-live="polite">
-      {/* Background glowing particles overlay */}
-      <EmberParticles />
-
       <div className={styles.loaderContent}>
         <div className={styles.spinner} />
         <h2 className={styles.title}>INITIALIZING CINEMATIC SEQUENCE</h2>
