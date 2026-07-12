@@ -36,7 +36,7 @@ export const Home: React.FC = () => {
         const timer = setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth' });
         }, 100);
-        return () => clearTimeout(timer);
+        return () => { clearTimeout(timer); };
       }
     }
   }, [state, location.hash]);
@@ -247,7 +247,7 @@ export const Home: React.FC = () => {
                 </button>
                 <button 
                   className={styles.secondaryBtn}
-                  onClick={() => document.getElementById('brick')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => { document.getElementById('brick')?.scrollIntoView({ behavior: 'smooth' }); }}
                 >
                   EXPLORE THE BRICK
                 </button>

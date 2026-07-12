@@ -24,10 +24,10 @@ export function useScrollReveal(dependency?: unknown) {
     );
 
     const elements = document.querySelectorAll('.scroll-reveal');
-    elements.forEach((el) => observer.observe(el));
+    elements.forEach((el) => { observer.observe(el); });
 
     return () => {
-      elements.forEach((el) => observer.unobserve(el));
+      elements.forEach((el) => { observer.unobserve(el); });
     };
   }, [dependency]);
 }

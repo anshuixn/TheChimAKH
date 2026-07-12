@@ -3,6 +3,16 @@ import { Link, useLocation } from 'react-router-dom';
 import SkipLink from '../ui/SkipLink';
 import styles from './SiteHeader.module.css';
 
+const navItems = [
+  { label: 'HOME', hash: 'home' },
+  { label: 'THE BRICK', hash: 'brick' },
+  { label: 'MANUFACTURING', hash: 'manufacturing' },
+  { label: 'QUALITY', hash: 'quality' },
+  { label: 'INFRASTRUCTURE', hash: 'infrastructure' },
+  { label: 'ABOUT', hash: 'about' },
+  { label: 'CONTACT', hash: 'contact' },
+];
+
 export const SiteHeader: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -11,16 +21,6 @@ export const SiteHeader: React.FC = () => {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const isFirstRender = useRef(true);
-
-  const navItems = [
-    { label: 'HOME', hash: 'home' },
-    { label: 'THE BRICK', hash: 'brick' },
-    { label: 'MANUFACTURING', hash: 'manufacturing' },
-    { label: 'QUALITY', hash: 'quality' },
-    { label: 'INFRASTRUCTURE', hash: 'infrastructure' },
-    { label: 'ABOUT', hash: 'about' },
-    { label: 'CONTACT', hash: 'contact' },
-  ];
 
   // Active section tracking via IntersectionObserver
   useEffect(() => {
@@ -44,10 +44,10 @@ export const SiteHeader: React.FC = () => {
       });
     }, observerOptions);
 
-    sections.forEach((sec) => observer.observe(sec));
+    sections.forEach((sec) => { observer.observe(sec); });
 
     return () => {
-      sections.forEach((sec) => observer.unobserve(sec));
+      sections.forEach((sec) => { observer.unobserve(sec); });
     };
   }, [location.pathname]);
 
@@ -135,7 +135,7 @@ export const SiteHeader: React.FC = () => {
                 <li key={item.hash}>
                   <Link 
                     to={`/#${item.hash}`}
-                    onClick={(e) => handleNavClick(e, item.hash)}
+                    onClick={(e) => { handleNavClick(e, item.hash); }}
                     className={`${styles.navLink} ${isActive ? styles.activeLink : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -206,7 +206,7 @@ export const SiteHeader: React.FC = () => {
                 <li key={item.hash}>
                   <Link 
                     to={`/#${item.hash}`}
-                    onClick={(e) => handleNavClick(e, item.hash)}
+                    onClick={(e) => { handleNavClick(e, item.hash); }}
                     className={`${styles.drawerNavLink} ${isActive ? styles.drawerActiveLink : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -223,4 +223,3 @@ export const SiteHeader: React.FC = () => {
 };
 
 export default SiteHeader;
-
