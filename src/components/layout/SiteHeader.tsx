@@ -6,20 +6,50 @@ import styles from './SiteHeader.module.css';
 export const SiteHeader: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const isFirstRender = useRef(true);
 
   const navItems = [
-    { label: 'HOME', path: '/' },
-    { label: 'THE BRICK', path: '/brick' },
-    { label: 'MANUFACTURING', path: '/manufacturing' },
-    { label: 'QUALITY', path: '/quality' },
-    { label: 'INFRASTRUCTURE', path: '/infrastructure' },
-    { label: 'ABOUT', path: '/about' },
-    { label: 'CONTACT', path: '/contact' },
+    { label: 'HOME', hash: 'home' },
+    { label: 'THE BRICK', hash: 'brick' },
+    { label: 'MANUFACTURING', hash: 'manufacturing' },
+    { label: 'QUALITY', hash: 'quality' },
+    { label: 'INFRASTRUCTURE', hash: 'infrastructure' },
+    { label: 'ABOUT', hash: 'about' },
+    { label: 'CONTACT', hash: 'contact' },
   ];
+
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+
+    const sections = navItems
+      .map((item) => document.getElementById(item.hash))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -50% 0px',
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((sec) => observer.observe(sec));
+
+    return () => {
+      sections.forEach((sec) => observer.unobserve(sec));
+    };
+  }, [location.pathname]);
 
   // Sync body scroll-lock and data-mobile-nav-state attribute
   useEffect(() => {
@@ -57,7 +87,7 @@ export const SiteHeader: React.FC = () => {
     };
   }, [isOpen]);
 
-  // Focus management: return focus to hamburger button on close, focus close button on open
+  // Focus management
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -69,6 +99,20 @@ export const SiteHeader: React.FC = () => {
       closeButtonRef.current?.focus();
     }
   }, [isOpen]);
+
+  // Custom click handler for section scrolling
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    setIsOpen(false);
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const target = document.getElementById(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `#${hash}`);
+        setActiveSection(hash);
+      }
+    }
+  };
 
   return (
     <header className={styles.header}>
@@ -86,11 +130,12 @@ export const SiteHeader: React.FC = () => {
         <nav className={styles.nav} aria-label="Main Navigation">
           <ul className={styles.navList}>
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
+              const isActive = location.pathname === '/' && activeSection === item.hash;
               return (
-                <li key={item.path}>
+                <li key={item.hash}>
                   <Link 
-                    to={item.path} 
+                    to={`/#${item.hash}`}
+                    onClick={(e) => handleNavClick(e, item.hash)}
                     className={`${styles.navLink} ${isActive ? styles.activeLink : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -156,11 +201,12 @@ export const SiteHeader: React.FC = () => {
         <nav className={styles.drawerNav} aria-label="Mobile Navigation">
           <ul className={styles.drawerNavList}>
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
+              const isActive = location.pathname === '/' && activeSection === item.hash;
               return (
-                <li key={item.path}>
+                <li key={item.hash}>
                   <Link 
-                    to={item.path} 
+                    to={`/#${item.hash}`}
+                    onClick={(e) => handleNavClick(e, item.hash)}
                     className={`${styles.drawerNavLink} ${isActive ? styles.drawerActiveLink : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -177,3 +223,4 @@ export const SiteHeader: React.FC = () => {
 };
 
 export default SiteHeader;
+

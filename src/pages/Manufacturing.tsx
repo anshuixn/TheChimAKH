@@ -57,7 +57,7 @@ export const Manufacturing: React.FC = () => {
       </header>
 
       {/* Steps List */}
-      <section className={styles.stepsSection} aria-label="Production stages">
+      <section className={`${styles.stepsSection} scroll-reveal`} aria-label="Production stages">
         <div className={styles.container}>
           <div className={styles.stepsGrid}>
             {steps.map((step) => (
@@ -74,18 +74,29 @@ export const Manufacturing: React.FC = () => {
       </section>
 
       {/* Quality commitment callout */}
-      <section className={styles.commitment} aria-labelledby="commitment-title">
+      <section className={`${styles.commitment} scroll-reveal`} aria-labelledby="commitment-title">
         <div className={styles.container}>
-          <div className={styles.commitmentBox}>
-            <h2 id="commitment-title" className={styles.commitmentTitle}>
-              SUSTAINED INDUSTRIAL CONSISTENCY
-            </h2>
-            <p className={styles.commitmentText}>
-              By keeping continuous coal-fired kiln loops active 24/7 during operating seasons, we avoid batch variance in firing temperatures. Every single delivery matches structural specifications.
-            </p>
-            <a href="/quality" className={styles.commitmentBtn}>
-              EXPLORE TESTING STANDARDS &rarr;
-            </a>
+          <div className={styles.commitmentGrid}>
+            <div className={styles.commitmentContent}>
+              <h2 id="commitment-title" className={styles.commitmentTitle}>
+                SUSTAINED INDUSTRIAL CONSISTENCY
+              </h2>
+              <p className={styles.commitmentText}>
+                By keeping continuous coal-fired kiln loops active 24/7 during operating seasons, we avoid batch variance in firing temperatures. Every single delivery matches structural specifications.
+              </p>
+              <a href="/quality" className={styles.commitmentBtn}>
+                EXPLORE TESTING STANDARDS &rarr;
+              </a>
+            </div>
+            
+            <div className={styles.imageWrapper}>
+              <img
+                src="/images/manufacturing_kiln.png"
+                alt="Continuous coal-fired brick kiln glowing chambers firing clay bricks at uniform high temperatures."
+                className={styles.kilnImage}
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>

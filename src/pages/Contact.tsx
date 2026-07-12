@@ -24,7 +24,7 @@ export const Contact: React.FC = () => {
         </div>
       </header>
 
-      <section className={styles.formSection} aria-label="Inquiry form">
+      <section className={`${styles.formSection} scroll-reveal`} aria-label="Inquiry form">
         <div className={styles.container}>
           <div className={styles.formGrid}>
             <div className={styles.formWrapper}>

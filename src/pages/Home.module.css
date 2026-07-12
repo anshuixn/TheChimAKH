@@ -14,15 +14,19 @@
 /* Hero Section */
 .heroSection {
   position: relative;
-  height: 80vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-image: url('/experience/posters/poster-entrance.png');
+  background-image: url('/images/hero_brick_kiln.png');
   background-size: cover;
   background-position: center;
   border-bottom: 1px solid var(--color-slate);
+}
+
+.sectionWrapper {
+  scroll-margin-top: 5rem; /* Matches header height to prevent fixed nav overlap */
 }
 
 .heroOverlay {

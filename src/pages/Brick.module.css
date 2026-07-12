@@ -203,3 +203,38 @@
   outline: 2px solid var(--color-ember);
   outline-offset: 3px;
 }
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .specsGrid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.productImageWrapper {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-slate);
+  overflow: hidden;
+  background-color: var(--color-kiln-black);
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.productImageWrapper:hover .productImage {
+  transform: scale(1.03);
+}
+

@@ -24,7 +24,7 @@ export const Infrastructure: React.FC = () => {
       </header>
 
       {/* Facilities Grid */}
-      <section className={styles.facilitiesSection} aria-label="Campus layout">
+      <section className={`${styles.facilitiesSection} scroll-reveal`} aria-label="Campus layout">
         <div className={styles.container}>
           <div className={styles.grid}>
             {/* Facility 1 */}
@@ -79,18 +79,29 @@ export const Infrastructure: React.FC = () => {
       </section>
 
       {/* Logistics CTA */}
-      <section className={styles.logisticsCTA} aria-labelledby="logistics-title">
+      <section className={`${styles.logisticsCTA} scroll-reveal`} aria-labelledby="logistics-title">
         <div className={styles.container}>
-          <div className={styles.ctaBox}>
-            <h2 id="logistics-title" className={styles.ctaTitle}>
-              PLANNING SITE SHIPMENTS?
-            </h2>
-            <p className={styles.ctaText}>
-              We coordinate dispatch intervals to match your foundation and framing stages. Contact our scheduling desk to arrange bulk deliveries.
-            </p>
-            <a href="/request-quote" className={styles.ctaLink}>
-              REQUEST SHIPPING DELIVERY TIMES &rarr;
-            </a>
+          <div className={styles.logisticsGrid}>
+            <div className={styles.logisticsContent}>
+              <h2 id="logistics-title" className={styles.ctaTitle}>
+                PLANNING SITE SHIPMENTS?
+              </h2>
+              <p className={styles.ctaText}>
+                We coordinate dispatch intervals to match your foundation and framing stages. Contact our scheduling desk to arrange bulk deliveries.
+              </p>
+              <a href="/request-quote" className={styles.ctaLink}>
+                REQUEST SHIPPING DELIVERY TIMES &rarr;
+              </a>
+            </div>
+            
+            <div className={styles.imageWrapper}>
+              <img
+                src="/images/kiln_infrastructure.png"
+                alt="Central high-volume chimney infrastructure campus showing logistics flatbeds loading bricks."
+                className={styles.infraImage}
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>

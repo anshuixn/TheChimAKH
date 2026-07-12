@@ -47,7 +47,7 @@ export const Quality: React.FC = () => {
       </header>
 
       {/* Tests Section */}
-      <section className={styles.testsSection} aria-label="Testing procedures">
+      <section className={`${styles.testsSection} scroll-reveal`} aria-label="Testing procedures">
         <div className={styles.container}>
           <div className={styles.testsGrid}>
             {tests.map((test, idx) => (
@@ -62,18 +62,29 @@ export const Quality: React.FC = () => {
       </section>
 
       {/* Batch Certification Info */}
-      <section className={styles.certification} aria-labelledby="cert-title">
+      <section className={`${styles.certification} scroll-reveal`} aria-labelledby="cert-title">
         <div className={styles.container}>
-          <div className={styles.certBox}>
-            <h2 id="cert-title" className={styles.certTitle}>
-              BATCH VERIFICATION RECORD
-            </h2>
-            <p className={styles.certText}>
-              Every order batch is logged before dispatch. Upon client scheduling request, we supply verified laboratory crushing and absorption test reports matching the batch identifier.
-            </p>
-            <a href="/contact" className={styles.certLink}>
-              CONTACT QUALITY CONTROL &rarr;
-            </a>
+          <div className={styles.certGrid}>
+            <div className={styles.certContent}>
+              <h2 id="cert-title" className={styles.certTitle}>
+                BATCH VERIFICATION RECORD
+              </h2>
+              <p className={styles.certText}>
+                Every order batch is logged before dispatch. Upon client scheduling request, we supply verified laboratory crushing and absorption test reports matching the batch identifier.
+              </p>
+              <a href="/contact" className={styles.certLink}>
+                CONTACT QUALITY CONTROL &rarr;
+              </a>
+            </div>
+            
+            <div className={styles.imageWrapper}>
+              <img
+                src="/images/quality_testing.png"
+                alt="Materials laboratory testing Maa Sita bricks under dynamic hydraulic compressive crush tests."
+                className={styles.labImage}
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>

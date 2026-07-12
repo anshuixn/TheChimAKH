@@ -24,7 +24,7 @@ export const About: React.FC = () => {
       </header>
 
       {/* Narrative Section */}
-      <section className={styles.storySection} aria-label="Our heritage">
+      <section className={`${styles.storySection} scroll-reveal`} aria-label="Our heritage">
         <div className={styles.container}>
           <div className={styles.storyGrid}>
             <div>
@@ -50,12 +50,21 @@ export const About: React.FC = () => {
                 Operating under registered registration markers [PLACEHOLDER — GSTIN / REGISTRATION DETAILS], our facility incorporates large drying arrays, automated raw preparation pug mills, and multi-chamber continuous kiln pathways.
               </p>
             </div>
+
+            <div className={styles.imageWrapper}>
+              <img
+                src="/images/about_heritage.png"
+                alt="Traditional wooden moulding trays and raw alluvial clay soil weathering in the sun."
+                className={styles.heritageImage}
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Leadership Values */}
-      <section className={styles.valuesSection} aria-label="Core values">
+      <section className={`${styles.valuesSection} scroll-reveal`} aria-label="Core values">
         <div className={styles.container}>
           <h2 className={styles.valuesTitle}>OPERATIONAL VALUES</h2>
           <div className={styles.valuesGrid}>

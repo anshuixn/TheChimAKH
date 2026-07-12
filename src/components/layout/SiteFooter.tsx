@@ -23,12 +23,12 @@ export const SiteFooter: React.FC = () => {
             <h2 className={styles.colTitle}>NAVIGATION</h2>
             <nav className={styles.nav} aria-label="Footer Navigation">
               <ul className={styles.linkList}>
-                <li><Link to="/" className={styles.footerLink}>Home</Link></li>
-                <li><Link to="/brick" className={styles.footerLink}>The Brick</Link></li>
-                <li><Link to="/manufacturing" className={styles.footerLink}>Manufacturing</Link></li>
-                <li><Link to="/quality" className={styles.footerLink}>Quality</Link></li>
-                <li><Link to="/infrastructure" className={styles.footerLink}>Infrastructure</Link></li>
-                <li><Link to="/about" className={styles.footerLink}>About Us</Link></li>
+                <li><Link to="/#home" className={styles.footerLink}>Home</Link></li>
+                <li><Link to="/#brick" className={styles.footerLink}>The Brick</Link></li>
+                <li><Link to="/#manufacturing" className={styles.footerLink}>Manufacturing</Link></li>
+                <li><Link to="/#quality" className={styles.footerLink}>Quality</Link></li>
+                <li><Link to="/#infrastructure" className={styles.footerLink}>Infrastructure</Link></li>
+                <li><Link to="/#about" className={styles.footerLink}>About Us</Link></li>
               </ul>
             </nav>
           </div>

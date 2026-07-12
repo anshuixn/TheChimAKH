@@ -1,20 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDeviceCapability } from '../features/experience/useDeviceCapability';
 import { loadFrameManifest } from '../features/experience/frameManifest';
 import { ExperienceEntry } from '../features/experience/ExperienceEntry';
 import { CinematicExperience } from '../features/experience/CinematicExperience';
 import { ExperienceFallback } from '../features/experience/ExperienceFallback';
 import { updateMetaTags, injectStructuredData } from '../lib/seo';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import Brick from './Brick';
+import Manufacturing from './Manufacturing';
+import Quality from './Quality';
+import Infrastructure from './Infrastructure';
+import About from './About';
+import Contact from './Contact';
 import styles from './Home.module.css';
 
 export type HomeState = 'ENTRY' | 'CINEMATIC' | 'SEMANTIC_HOME' | 'STATIC_FALLBACK';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const deviceTier = useDeviceCapability();
 
   const [state, setState] = useState<HomeState>('ENTRY');
+
+  // Trigger fallback scroll reveal observer
+  useScrollReveal(state);
+
+  // Handle hash scrolling on page load / route updates
+  useEffect(() => {
+    if (state === 'SEMANTIC_HOME' && location.hash) {
+      const targetId = location.hash.substring(1);
+      const element = document.getElementById(targetId);
+      if (element) {
+        const timer = setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [state, location.hash]);
+
   const [frameUrls, setFrameUrls] = useState<string[]>([]);
   const [isPreloadActive, setIsPreloadActive] = useState(false);
   const [preloadProgress, setPreloadProgress] = useState(0);
@@ -205,7 +231,7 @@ export const Home: React.FC = () => {
       return (
         <div className={styles.homeContainer} id="main-content">
           {/* Header Hero Section */}
-          <section className={styles.heroSection}>
+          <section id="home" className={styles.heroSection}>
             <div className={styles.heroOverlay} />
             <div className={styles.container}>
               <h1 className={styles.mainTitle}>MAA SITA INT UDHYOG</h1>
@@ -219,47 +245,40 @@ export const Home: React.FC = () => {
                 >
                   REQUEST A QUOTE
                 </button>
-                <a href="/brick" className={styles.secondaryBtn}>
+                <button 
+                  className={styles.secondaryBtn}
+                  onClick={() => document.getElementById('brick')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   EXPLORE THE BRICK
-                </a>
+                </button>
               </div>
             </div>
           </section>
 
-          {/* Main semantic brand copy (Crawlable HTML) */}
-          <section className={styles.storySection}>
-            <div className={styles.container}>
-              <div className={styles.storyGrid}>
-                <div>
-                  <h2 className={styles.sectionTitle}>OUR STORY</h2>
-                  <p className={styles.storyText}>
-                    Rooted in craft and powered by precision, Maa Sita Int Udhyog manufactures traditional fired-clay bricks for primary load-bearing structural masonry in residential and commercial developments.
-                  </p>
-                </div>
-                <div>
-                  <h2 className={styles.sectionTitle}>OUR QUALITY</h2>
-                  <p className={styles.storyText}>
-                    Every brick is manufactured using rich alluvial soils, shaped with dimensional consistency, and fired inside our high-capacity continuous kiln for uniform density and high compressive strength.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* Stacking All Main Page Sections */}
+          <div id="brick" className={styles.sectionWrapper}>
+            <Brick />
+          </div>
 
-          {/* Infrastructure spotlight section */}
-          <section className={styles.infraSpotlight}>
-            <div className={styles.container}>
-              <h2 className={styles.spotlightTitle}>INDUSTRIAL CAPACITY</h2>
-              <p className={styles.spotlightLead}>
-                Our central kiln campus handles high volume capacity with daily production runs to fulfill structural supplies for large-scale infrastructure and regional distributors.
-              </p>
-              <div className={styles.spotlightActions}>
-                <a href="/infrastructure" className={styles.spotlightLink}>
-                  LEARN ABOUT INFRASTRUCTURE &rarr;
-                </a>
-              </div>
-            </div>
-          </section>
+          <div id="manufacturing" className={styles.sectionWrapper}>
+            <Manufacturing />
+          </div>
+
+          <div id="quality" className={styles.sectionWrapper}>
+            <Quality />
+          </div>
+
+          <div id="infrastructure" className={styles.sectionWrapper}>
+            <Infrastructure />
+          </div>
+
+          <div id="about" className={styles.sectionWrapper}>
+            <About />
+          </div>
+
+          <div id="contact" className={styles.sectionWrapper}>
+            <Contact />
+          </div>
         </div>
       );
   }

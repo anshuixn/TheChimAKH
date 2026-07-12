@@ -34,33 +34,46 @@ export const Brick: React.FC = () => {
         </div>
       </header>
 
-      {/* Specifications Table */}
-      <section className={styles.specsSection} aria-labelledby="specs-heading">
+      {/* Specifications Table & Product Detail */}
+      <section className={`${styles.specsSection} scroll-reveal`} aria-labelledby="specs-heading">
         <div className={styles.container}>
-          <h2 id="specs-heading" className={styles.sectionTitle}>TECHNICAL SPECIFICATIONS</h2>
-          
-          <table className={styles.specsTable}>
-            <caption className="sr-only">Detailed material and physical characteristics of the red clay brick</caption>
-            <thead>
-              <tr>
-                <th scope="col" className={styles.tableHeader}>CHARACTERISTIC</th>
-                <th scope="col" className={styles.tableHeader}>VERIFIED SPECIFICATION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {specsList.map((spec, idx) => (
-                <tr key={idx} className={styles.tableRow}>
-                  <td className={styles.specLabel}>{spec.label}</td>
-                  <td className={styles.specVal}>{spec.val}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className={styles.specsGrid}>
+            <div>
+              <h2 id="specs-heading" className={styles.sectionTitle}>TECHNICAL SPECIFICATIONS</h2>
+              
+              <table className={styles.specsTable}>
+                <caption className="sr-only">Detailed material and physical characteristics of the red clay brick</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" className={styles.tableHeader}>CHARACTERISTIC</th>
+                    <th scope="col" className={styles.tableHeader}>VERIFIED SPECIFICATION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {specsList.map((spec, idx) => (
+                    <tr key={idx} className={styles.tableRow}>
+                      <td className={styles.specLabel}>{spec.label}</td>
+                      <td className={styles.specVal}>{spec.val}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className={styles.productImageWrapper}>
+              <img
+                src="/images/brick_product_detail.png"
+                alt="Macro close-up of a premium Maa Sita red clay structural brick displaying rich texture and consistent dimensions."
+                className={styles.productImage}
+                loading="lazy"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Construction Applications */}
-      <section className={styles.applicationsSection} aria-labelledby="apps-heading">
+      <section className={`${styles.applicationsSection} scroll-reveal`} aria-labelledby="apps-heading">
         <div className={styles.container}>
           <div className={styles.grid}>
             <div>

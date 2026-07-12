@@ -71,22 +71,22 @@ test.describe('Maa Sita Int Udhyog E2E Suite', () => {
     }
 
     // Verify navigation links are present and active (use footer fallback on mobile screens)
-    let manufacturingLink = page.locator('header nav[aria-label="Main Navigation"] a[href="/manufacturing"]');
+    let manufacturingLink = page.locator('header nav[aria-label="Main Navigation"] a[href*="manufacturing"]');
     if (!(await manufacturingLink.isVisible())) {
-      manufacturingLink = page.locator('footer a[href="/manufacturing"]');
+      manufacturingLink = page.locator('footer a[href*="manufacturing"]');
     }
     await expect(manufacturingLink).toBeVisible();
     await manufacturingLink.click();
-    await expect(page).toHaveURL(/\/manufacturing$/);
+    await expect(page).toHaveURL(/#manufacturing$/);
     await expect(page.locator('h1:has-text("FIRED BY PRECISION")')).toBeVisible();
 
-    let qualityLink = page.locator('header nav[aria-label="Main Navigation"] a[href="/quality"]');
+    let qualityLink = page.locator('header nav[aria-label="Main Navigation"] a[href*="quality"]');
     if (!(await qualityLink.isVisible())) {
-      qualityLink = page.locator('footer a[href="/quality"]');
+      qualityLink = page.locator('footer a[href*="quality"]');
     }
     await expect(qualityLink).toBeVisible();
     await qualityLink.click();
-    await expect(page).toHaveURL(/\/quality$/);
+    await expect(page).toHaveURL(/#quality$/);
     await expect(page.locator('h1:has-text("STANDARDS WE UPHOLD")')).toBeVisible();
   });
 

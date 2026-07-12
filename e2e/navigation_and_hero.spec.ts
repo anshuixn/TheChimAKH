@@ -81,9 +81,9 @@ test.describe('Responsive Navigation & Mobile Drawer (Workstream B & H1)', () =>
 
       // 5. Open and click link to navigate (should close drawer auto-actively)
       await hamburger.click();
-      const manufacturingLink = page.locator('#mobile-nav-drawer a[href="/manufacturing"]');
+      const manufacturingLink = page.locator('#mobile-nav-drawer a[href*="manufacturing"]');
       await manufacturingLink.click();
-      await expect(page).toHaveURL(/\/manufacturing$/);
+      await expect(page).toHaveURL(/#manufacturing$/);
       await expect(page.locator('body')).toHaveAttribute('data-mobile-nav-state', 'closed');
     });
   }

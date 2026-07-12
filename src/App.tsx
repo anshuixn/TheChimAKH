@@ -1,12 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
-import Brick from './pages/Brick';
-import Manufacturing from './pages/Manufacturing';
-import Quality from './pages/Quality';
-import Infrastructure from './pages/Infrastructure';
-import About from './pages/About';
-import Contact from './pages/Contact';
 import RequestQuote from './pages/RequestQuote';
 import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
@@ -25,12 +19,12 @@ export const App: React.FC = () => {
           <main style={{ flex: 1 }} id="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/brick" element={<Brick />} />
-              <Route path="/manufacturing" element={<Manufacturing />} />
-              <Route path="/quality" element={<Quality />} />
-              <Route path="/infrastructure" element={<Infrastructure />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/brick" element={<Navigate to="/#brick" replace />} />
+              <Route path="/manufacturing" element={<Navigate to="/#manufacturing" replace />} />
+              <Route path="/quality" element={<Navigate to="/#quality" replace />} />
+              <Route path="/infrastructure" element={<Navigate to="/#infrastructure" replace />} />
+              <Route path="/about" element={<Navigate to="/#about" replace />} />
+              <Route path="/contact" element={<Navigate to="/#contact" replace />} />
               <Route path="/request-quote" element={<RequestQuote />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="*" element={<NotFound />} />
