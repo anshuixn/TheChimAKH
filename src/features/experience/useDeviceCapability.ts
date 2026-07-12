@@ -3,48 +3,48 @@ import { useNetworkCapability } from './useNetworkCapability';
 
 export type DeviceTier = 'full' | 'lite' | 'static';
 
-interface NavigatorWithMemory extends Navigator {
-  readonly deviceMemory?: number;
-}
-
 export function useDeviceCapability(): DeviceTier {
   const networkTier = useNetworkCapability();
   const [tier, setTier] = useState<DeviceTier>('full');
 
   useEffect(() => {
     function evaluateCapability() {
-      // 1. Reduced motion preference
+      // 1. Reduced motion preference (UX/Product policy)
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) {
         setTier('static');
         return;
       }
 
-      // 2. Save Data active
+      // 2. Save Data active (Product policy)
       const connection = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
       if (connection?.saveData === true) {
         setTier('static');
         return;
       }
 
-      // 3. Viewport width check (Initial mobile strategy: mobile/tablet gets static fallback)
+      // 3. Canvas 2D Support Check (Technical requirement)
+      const canvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+      const hasCanvas2d = !!(canvas?.getContext && canvas.getContext('2d'));
+      if (!hasCanvas2d) {
+        setTier('static');
+        return;
+      }
+
+      // 4. Viewport width check (Initial mobile/tablet strategy: forced to static fallback)
       const width = window.innerWidth;
       if (width < 1024) {
-        // Mobile and tablet are forced to static fallback for the initial release
         setTier('static');
         return;
       }
 
-      // 4. Memory and CPU checks
-      const memory = (navigator as NavigatorWithMemory).deviceMemory ?? 4;
-      const cpus = navigator.hardwareConcurrency;
-
-      if (memory < 2 || cpus < 2 || networkTier === 'low') {
+      // 5. Network-based tier selection (Load-time policy)
+      if (networkTier === 'low') {
         setTier('static');
         return;
       }
 
-      if (memory < 4 || cpus < 4 || networkTier === 'medium') {
+      if (networkTier === 'medium') {
         setTier('lite');
         return;
       }
@@ -54,7 +54,6 @@ export function useDeviceCapability(): DeviceTier {
 
     evaluateCapability();
 
-    // Listen to resize to adapt if screen crosses breakpoints (optional, but clean for rotation)
     const handleResize = () => {
       evaluateCapability();
     };

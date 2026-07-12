@@ -40,6 +40,26 @@ export const Home: React.FC = () => {
     }
   }, [deviceTier]);
 
+  // Sync general experience state machine to DOM attribute
+  useEffect(() => {
+    if (state === 'STATIC_FALLBACK') {
+      document.body.setAttribute('data-experience-state', 'static-fallback-ready');
+    } else if (state === 'SEMANTIC_HOME') {
+      document.body.setAttribute('data-experience-state', 'idle');
+    }
+    // ENTRY and CINEMATIC states are managed inside ExperienceEntry and CinematicExperience respectively
+    return () => {
+      document.body.removeAttribute('data-experience-state');
+    };
+  }, [state]);
+
+  // Automatically advance to CINEMATIC state when preload is complete and user has clicked enter
+  useEffect(() => {
+    if (state === 'ENTRY' && isPreloadActive && preloadProgress >= 20) {
+      setState('CINEMATIC');
+    }
+  }, [state, isPreloadActive, preloadProgress]);
+
   // Set page-level metadata
   useEffect(() => {
     updateMetaTags({

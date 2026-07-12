@@ -66,6 +66,18 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
     }
   }, [isInitialPreloadReady, isLoaderDismissed]);
 
+  // Sync loader dismissal state with data-experience-state on the body
+  useEffect(() => {
+    if (isLoaderDismissed) {
+      document.body.setAttribute('data-experience-state', 'cinematic-ready');
+    } else {
+      document.body.setAttribute('data-experience-state', 'cinematic-loading');
+    }
+    return () => {
+      document.body.removeAttribute('data-experience-state');
+    };
+  }, [isLoaderDismissed]);
+
   return (
     <div 
       className={styles.scrollWrapper} 

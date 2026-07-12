@@ -10,19 +10,35 @@
   z-index: var(--z-experience);
 }
 
-.backgroundPoster {
+.visualLayer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/experience/posters/poster-entrance.png');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.25;
-  filter: grayscale(100%) contrast(1.1);
+  overflow: hidden;
   pointer-events: none;
   z-index: var(--z-below);
+}
+
+.posterImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.25;
+  filter: grayscale(100%) contrast(1.1);
+  transform-origin: 0 0;
+  transition: transform 1.5s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.5s ease;
+}
+
+.posterImageZoomed {
+  transform: translate(var(--zoom-tx), var(--zoom-ty)) scale(var(--zoom-scale));
+  opacity: 1; /* Fade into full contrast as we zoom */
+  filter: grayscale(0%) contrast(1.0); /* Transition to full color */
 }
 
 .content {
@@ -34,6 +50,11 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-12);
+  transition: opacity 1.0s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.contentFading {
+  opacity: 0;
 }
 
 .header {
