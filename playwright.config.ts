@@ -11,19 +11,31 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Ensure headless browsers don't falsely trigger prefers-reduced-motion
+    reducedMotion: 'no-preference',
+    colorScheme: 'dark',
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        reducedMotion: 'no-preference',
+      },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        reducedMotion: 'no-preference',
+      },
     },
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 7'] },
+      use: {
+        ...devices['Pixel 7'],
+        reducedMotion: 'no-preference',
+      },
     },
   ],
   webServer: {

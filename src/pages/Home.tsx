@@ -53,15 +53,22 @@ export const Home: React.FC = () => {
   const [isPreloadActive, setIsPreloadActive] = useState(false);
   const [preloadProgress, setPreloadProgress] = useState(0);
 
-  // Load manifest at start
+  // Load manifest at start — fall back to desktop if mobile manifest is not yet deployed
   useEffect(() => {
     loadFrameManifest(sequenceType)
       .then((manifest) => {
         setFrameUrls(manifest.frameUrls);
       })
-      .catch((err: unknown) => {
-        console.error('Failed to load frame manifest:', err);
-        // Fallback to static editorial mode on manifest errors
+      .catch(() => {
+        if (sequenceType === 'mobile') {
+          // Mobile manifest may not be deployed yet — silently fall back to desktop
+          return loadFrameManifest('desktop')
+            .then((manifest) => { setFrameUrls(manifest.frameUrls); })
+            .catch((err: unknown) => {
+              console.error('Failed to load frame manifest (desktop fallback):', err);
+              setState('STATIC_FALLBACK');
+            });
+        }
         setState('STATIC_FALLBACK');
       });
   }, [sequenceType]);
