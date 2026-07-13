@@ -68,6 +68,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   // Handle video ready for mobile
   useEffect(() => {
     if (isMobileVideo && isVideoReady && !isLoaderDismissed) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoaderDismissed(true);
       onPreloadComplete();
     }
@@ -115,7 +116,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
               src="/experience/mobile/sequence.mp4"
               poster="/experience/mobile/sequence/frame_0001.jpg"
               progress={progress}
-              onReady={() => setIsVideoReady(true)}
+              onReady={() => { setIsVideoReady(true); }}
             />
           ) : (
             <ExperienceCanvas 

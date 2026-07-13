@@ -89,9 +89,8 @@ export const ExperienceVideo: React.FC<ExperienceVideoProps> = ({
       rafIdRef.current = requestAnimationFrame(processSeek);
     };
 
-    if (!rafIdRef.current) {
-      rafIdRef.current = requestAnimationFrame(processSeek);
-    }
+    // Start the loop
+    rafIdRef.current = requestAnimationFrame(processSeek);
 
     return () => {
       if (rafIdRef.current) {
