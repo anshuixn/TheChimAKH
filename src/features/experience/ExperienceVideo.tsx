@@ -72,8 +72,6 @@ export const ExperienceVideo: React.FC<ExperienceVideoProps> = ({
     targetTimeRef.current = progress * video.duration;
 
     const processSeek = () => {
-      if (!video) return;
-
       if (seekInProgress.current) {
         // Wait for current seek to finish
         rafIdRef.current = requestAnimationFrame(processSeek);
