@@ -11,38 +11,43 @@ export function useCanvasSizing(
 ): CanvasDimensions {
   const [dimensions, setDimensions] = useState<CanvasDimensions>({ width: 0, height: 0 });
   const timeoutRef = useRef<number | null>(null);
+  const firstResizeRef = useRef(true);
 
   useEffect(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
+    const applySizing = (width: number, height: number) => {
+      const dpr = Math.min(2.0, window.devicePixelRatio || 1.0);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${String(width)}px`;
+      canvas.style.height = `${String(height)}px`;
+      setDimensions({ width, height });
+    };
+
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0] as ResizeObserverEntry | undefined;
       if (!entry) return;
 
-      // Extract width/height from borderBoxSize or contentRect (avoiding layout thrashing)
       const width = entry.contentRect.width;
       const height = entry.contentRect.height;
 
-      // Debounce canvas dimension adjustments to avoid lag on drag
+      if (firstResizeRef.current) {
+        // Apply immediately on first observation — eliminates blank first frame
+        firstResizeRef.current = false;
+        applySizing(width, height);
+        return;
+      }
+
+      // Debounce subsequent resize events (50ms is enough to avoid thrash)
       if (timeoutRef.current !== null) {
         window.clearTimeout(timeoutRef.current);
       }
-
       timeoutRef.current = window.setTimeout(() => {
-        const dpr = Math.min(2.0, window.devicePixelRatio || 1.0);
-        
-        // DPR scaled inner coordinates
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-
-        // Visual CSS size matches container exactly
-        canvas.style.width = `${String(width)}px`;
-        canvas.style.height = `${String(height)}px`;
-
-        setDimensions({ width, height });
-      }, 100);
+        applySizing(width, height);
+      }, 50);
     });
 
     resizeObserver.observe(container);

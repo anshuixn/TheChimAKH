@@ -28,11 +28,12 @@ export function useFramePreloader({
   const cache = useMemo(() => new ProximityFrameCache(maxCacheSize), [maxCacheSize]);
 
   // Determine window size based on capabilities (number of future frames to preload)
-  let preloadWindow = 10;
+  // Mobile requires a much larger window since frames are loaded while scrolling
+  let preloadWindow = 20;
   if (deviceTier === 'lite' || networkTier === 'medium') {
-    preloadWindow = 5;
+    preloadWindow = 12;
   } else if (deviceTier === 'static' || networkTier === 'low') {
-    preloadWindow = 1;
+    preloadWindow = 5;
   }
 
   useEffect(() => {
@@ -53,8 +54,8 @@ export function useFramePreloader({
         }
       }
 
-      // Priority 3: Immediate previous frames
-      for (let i = 1; i <= 5; i++) {
+      // Priority 3: Immediate previous frames (buffer backward for reverse scroll)
+      for (let i = 1; i <= 10; i++) {
         const idx = currentIndex - i;
         if (idx >= 1 && !cache.has(idx)) {
           priorities.push(idx);
@@ -90,7 +91,7 @@ export function useFramePreloader({
       }
 
       // Abort active requests that are now too far from current index to yield connection pool slots
-      const maxKeepDistance = 15;
+      const maxKeepDistance = 30;
       const toAbort: number[] = [];
       activeRequestsRef.current.forEach((_, idx) => {
         if (Math.abs(idx - currentIndex) > maxKeepDistance) {
@@ -110,8 +111,8 @@ export function useFramePreloader({
         return;
       }
 
-      // Limit concurrent loads based on capability
-      const maxConcurrent = networkTier === 'high' ? 4 : 2;
+      // Increased concurrency: more parallel loads = frames ready faster during scroll
+      const maxConcurrent = networkTier === 'high' ? 6 : networkTier === 'medium' ? 4 : 2;
       const batch = queue.slice(0, maxConcurrent);
 
       batch.forEach((index) => {

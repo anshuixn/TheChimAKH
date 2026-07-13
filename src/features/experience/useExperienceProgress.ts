@@ -25,14 +25,18 @@ export function useExperienceProgress({ triggerRef }: ProgressHookOptions) {
     const triggerElement = triggerRef.current;
     if (!triggerElement) return;
 
-    // Use GSAP Context for easy React cleanup
+    const isMobile = window.innerWidth <= 768;
+
+    // Use the same context gsap.context
     const ctx = gsap.context(() => {
       scrollTriggerInstanceRef.current = ScrollTrigger.create({
         trigger: triggerElement,
         start: 'top top',
         end: '+=400%', // 4x screen height of scrolling space
         pin: true,
-        scrub: true,
+        // On mobile, a small scrub value smooths out touch jitter
+        // On desktop, scrub: true gives instant 1:1 response
+        scrub: isMobile ? 0.3 : true,
         onUpdate: (self) => {
           if (!isMountedRef.current) return;
           const rawProgress = self.progress;

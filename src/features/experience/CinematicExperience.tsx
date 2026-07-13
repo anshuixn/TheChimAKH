@@ -59,7 +59,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         }
       }
     },
-    maxCacheSize: sequenceType === 'mobile' ? 40 : 80,
+    maxCacheSize: sequenceType === 'mobile' ? 60 : 80,
   });
 
   // Ensure loader gets dismissed eventually if initial preload was already verified
