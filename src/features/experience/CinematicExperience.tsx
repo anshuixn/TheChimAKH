@@ -8,12 +8,15 @@ import { ExperienceLoader } from './ExperienceLoader';
 import { EXPERIENCE_CHAPTERS } from './experience.config';
 import styles from './CinematicExperience.module.css';
 
+import type { SequenceType } from '../../hooks/useSequenceType';
+
 interface CinematicExperienceProps {
   frameUrls: string[];
   onExit: () => void;
   onQuoteClick: () => void;
   isInitialPreloadReady: boolean;
   onPreloadComplete: () => void;
+  sequenceType: SequenceType;
 }
 
 export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
@@ -22,6 +25,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   onQuoteClick,
   isInitialPreloadReady,
   onPreloadComplete,
+  sequenceType,
 }) => {
   const triggerRef = useRef<HTMLDivElement | null>(null);
   
@@ -55,7 +59,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         }
       }
     },
-    maxCacheSize: 80,
+    maxCacheSize: sequenceType === 'mobile' ? 40 : 80,
   });
 
   // Ensure loader gets dismissed eventually if initial preload was already verified

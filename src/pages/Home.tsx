@@ -7,6 +7,7 @@ import { CinematicExperience } from '../features/experience/CinematicExperience'
 import { ExperienceFallback } from '../features/experience/ExperienceFallback';
 import { updateMetaTags, injectStructuredData } from '../lib/seo';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useSequenceType } from '../hooks/useSequenceType';
 import Brick from './Brick';
 import Manufacturing from './Manufacturing';
 import Quality from './Quality';
@@ -21,6 +22,7 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const deviceTier = useDeviceCapability();
+  const sequenceType = useSequenceType();
 
   const [state, setState] = useState<HomeState>(() => {
     // If deep-linked to a hash section directly on load, bypass the cinematic intro
@@ -53,7 +55,7 @@ export const Home: React.FC = () => {
 
   // Load manifest at start
   useEffect(() => {
-    loadFrameManifest()
+    loadFrameManifest(sequenceType)
       .then((manifest) => {
         setFrameUrls(manifest.frameUrls);
       })
@@ -62,7 +64,7 @@ export const Home: React.FC = () => {
         // Fallback to static editorial mode on manifest errors
         setState('STATIC_FALLBACK');
       });
-  }, []);
+  }, [sequenceType]);
 
   // Sync state transitions on device performance capability discovery
   useEffect(() => {
@@ -241,6 +243,7 @@ export const Home: React.FC = () => {
           onQuoteClick={handleQuoteRedirect}
           isInitialPreloadReady={preloadProgress >= 20}
           onPreloadComplete={handlePreloadComplete}
+          sequenceType={sequenceType}
         />
       );
 

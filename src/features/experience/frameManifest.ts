@@ -17,19 +17,24 @@ export interface FrameManifest {
   generatedAt: string;
 }
 
-let cachedManifest: FrameManifest | null = null;
+import type { SequenceType } from '../../hooks/useSequenceType';
 
-export async function loadFrameManifest(): Promise<FrameManifest> {
-  if (cachedManifest) {
-    return cachedManifest;
+const cachedManifests: Record<SequenceType, FrameManifest | null> = {
+  desktop: null,
+  mobile: null,
+};
+
+export async function loadFrameManifest(type: SequenceType = 'desktop'): Promise<FrameManifest> {
+  if (cachedManifests[type]) {
+    return cachedManifests[type];
   }
 
-  const response = await fetch('/experience/desktop/frame-manifest.json');
+  const response = await fetch(`/experience/${type}/frame-manifest.json`);
   if (!response.ok) {
-    throw new Error(`Failed to load frame manifest: ${response.statusText}`);
+    throw new Error(`Failed to load frame manifest for ${type}: ${response.statusText}`);
   }
 
   const data = await response.json() as FrameManifest;
-  cachedManifest = data;
+  cachedManifests[type] = data;
   return data;
 }
