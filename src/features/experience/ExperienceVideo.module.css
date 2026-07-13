@@ -1,0 +1,36 @@
+.videoContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Opaque fallback background to prevent black flashes */
+  background-color: #1a1a1a; 
+  z-index: 1;
+}
+
+.fallbackPoster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fallbackPoster.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.videoElement {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 3;
+  /* Hardware acceleration for iOS, no complex filters */
+  transform: translateZ(0); 
+}
