@@ -78,11 +78,40 @@ export const ExperienceVideo: React.FC<ExperienceVideoProps> = ({
         return;
       }
 
-      const diff = Math.abs(video.currentTime - targetTimeRef.current);
+      let targetTime = targetTimeRef.current;
+
+      // Check if target time is fully buffered to prevent iOS black-screen buffering flashes
+      let isBuffered = false;
+      let closestEnd = 0;
+      
+      for (let i = 0; i < video.buffered.length; i++) {
+        const start = video.buffered.start(i);
+        const end = video.buffered.end(i);
+        if (targetTime >= start && targetTime <= end) {
+          isBuffered = true;
+          break;
+        }
+        if (end <= targetTime && end > closestEnd) {
+          closestEnd = end;
+        }
+      }
+
+      if (!isBuffered) {
+        if (closestEnd > 0) {
+          // Clamp to the edge of the nearest loaded buffer
+          targetTime = Math.max(0, closestEnd - 0.05);
+        } else {
+          // If we have no buffer at all, do not attempt to seek
+          rafIdRef.current = requestAnimationFrame(processSeek);
+          return;
+        }
+      }
+
+      const diff = Math.abs(video.currentTime - targetTime);
       if (diff > SEEK_EPSILON) {
         seekInProgress.current = true;
         try {
-          video.currentTime = targetTimeRef.current;
+          video.currentTime = targetTime;
         } catch {
           // Swallow InvalidStateError which can occur on iOS Safari if seeked too early
           seekInProgress.current = false;
