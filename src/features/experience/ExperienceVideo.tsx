@@ -81,7 +81,12 @@ export const ExperienceVideo: React.FC<ExperienceVideoProps> = ({
       const diff = Math.abs(video.currentTime - targetTimeRef.current);
       if (diff > SEEK_EPSILON) {
         seekInProgress.current = true;
-        video.currentTime = targetTimeRef.current;
+        try {
+          video.currentTime = targetTimeRef.current;
+        } catch {
+          // Swallow InvalidStateError which can occur on iOS Safari if seeked too early
+          seekInProgress.current = false;
+        }
       }
 
       rafIdRef.current = requestAnimationFrame(processSeek);

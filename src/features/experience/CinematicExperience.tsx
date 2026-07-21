@@ -114,7 +114,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
           {isMobileVideo ? (
             <ExperienceVideo 
               src="/experience/mobile/sequence.mp4"
-              poster="/experience/mobile/sequence/frame_0001.jpg"
+              poster="/experience/mobile/sequence/frame-0001.jpg"
               progress={progress}
               onReady={() => { setIsVideoReady(true); }}
             />

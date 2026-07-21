@@ -123,7 +123,10 @@ export function useFramePreloader({
         activeRequestsRef.current.set(index, controller);
 
         const url = frameUrls[index - 1];
-        if (!url) return;
+        if (!url) {
+          activeRequestsRef.current.delete(index);
+          return;
+        }
 
         loadFrame(url, controller.signal)
           .then((decodedFrame) => {
