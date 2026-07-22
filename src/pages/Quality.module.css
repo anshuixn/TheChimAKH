@@ -14,6 +14,13 @@
 .pageHeader {
   padding-block: var(--space-20) var(--space-12);
   border-bottom: 1px solid var(--color-slate);
+  position: relative;
+  background-image:
+    linear-gradient(to bottom, rgba(12,10,9,0.40) 0%, rgba(12,10,9,0.78) 60%, rgba(12,10,9,1) 100%),
+    url('/images/quality_testing_lab_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .badgeRow {
@@ -56,7 +63,11 @@
 /* Tests Section */
 .testsSection {
   padding-block: var(--section-md);
-  background-color: var(--color-carbon);
+  background-image:
+    linear-gradient(135deg, rgba(12,10,9,0.85) 0%, rgba(12,10,9,0.75) 100%),
+    url('/images/brick_wall_texture_bg.png');
+  background-size: cover;
+  background-position: center;
   border-bottom: 1px solid var(--color-slate);
 }
 
@@ -114,6 +125,12 @@
 /* Certification Box */
 .certification {
   padding-block: var(--section-md);
+  background-image:
+    linear-gradient(to bottom, rgba(12,10,9,0.65) 0%, rgba(12,10,9,0.60) 50%, rgba(12,10,9,0.85) 100%),
+    url('/images/stacked_bricks_warehouse_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .certGrid {

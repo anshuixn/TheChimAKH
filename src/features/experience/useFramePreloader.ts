@@ -29,11 +29,11 @@ export function useFramePreloader({
 
   // Determine window size based on capabilities (number of future frames to preload)
   // Mobile requires a much larger window since frames are loaded while scrolling
-  let preloadWindow = 20;
+  let preloadWindow = 40;
   if (deviceTier === 'lite' || networkTier === 'medium') {
-    preloadWindow = 12;
+    preloadWindow = 25;
   } else if (deviceTier === 'static' || networkTier === 'low') {
-    preloadWindow = 5;
+    preloadWindow = 12;
   }
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export function useFramePreloader({
       }
 
       // Priority 3: Immediate previous frames (buffer backward for reverse scroll)
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 20; i++) {
         const idx = currentIndex - i;
         if (idx >= 1 && !cache.has(idx)) {
           priorities.push(idx);

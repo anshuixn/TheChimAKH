@@ -14,6 +14,13 @@
 .pageHeader {
   padding-block: var(--space-20) var(--space-12);
   border-bottom: 1px solid var(--color-slate);
+  position: relative;
+  background-image:
+    linear-gradient(to bottom, rgba(12,10,9,0.55) 0%, rgba(12,10,9,0.80) 60%, rgba(12,10,9,1) 100%),
+    url('/images/hero_kiln_aerial_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .badgeRow {
@@ -83,7 +90,11 @@
 .specsSection {
   padding-block: var(--section-sm);
   border-bottom: 1px solid var(--color-slate);
-  background-color: var(--color-carbon);
+  background-image:
+    linear-gradient(to right, rgba(12,10,9,0.90) 0%, rgba(12,10,9,0.75) 50%, rgba(12,10,9,0.90) 100%),
+    url('/images/brick_wall_texture_bg.png');
+  background-size: cover;
+  background-position: center;
 }
 
 .sectionTitle {
@@ -143,6 +154,12 @@
 /* Applications section */
 .applicationsSection {
   padding-block: var(--section-md);
+  background-image:
+    linear-gradient(to bottom, rgba(12,10,9,0.80) 0%, rgba(12,10,9,0.70) 50%, rgba(12,10,9,0.85) 100%),
+    url('/images/stacked_bricks_warehouse_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .grid {

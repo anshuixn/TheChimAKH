@@ -7,7 +7,8 @@ export interface CanvasDimensions {
 
 export function useCanvasSizing(
   containerRef: React.RefObject<HTMLDivElement | null>,
-  canvasRef: React.RefObject<HTMLCanvasElement | null>
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  onResized?: (canvas: HTMLCanvasElement) => void,
 ): CanvasDimensions {
   const [dimensions, setDimensions] = useState<CanvasDimensions>({ width: 0, height: 0 });
   const timeoutRef = useRef<number | null>(null);
@@ -24,6 +25,10 @@ export function useCanvasSizing(
       canvas.height = height * dpr;
       canvas.style.width = `${String(width)}px`;
       canvas.style.height = `${String(height)}px`;
+      // Immediately repaint before React re-renders to prevent black flash
+      if (onResized) {
+        onResized(canvas);
+      }
       setDimensions({ width, height });
     };
 
