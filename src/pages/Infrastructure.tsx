@@ -12,12 +12,15 @@ export const Infrastructure: React.FC = () => {
   }, []);
 
   return (
-    <article className={styles.pageContainer}>
+    <article className={`${styles.pageContainer} atmospheric-bg`}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
           <div className={styles.headerGrid}>
             <div>
-              <span className={styles.eyebrow}>INDUSTRIAL FOOTPRINT</span>
+              <div className={styles.badgeRow}>
+                <span className={styles.eyebrow}>INDUSTRIAL FOOTPRINT</span>
+                <span className="visual-badge">HEAVY VOLUME PRODUCTION</span>
+              </div>
               <h1 className={styles.title}>HIGH-VOLUME INFRASTRUCTURE</h1>
               <p className={styles.description}>
                 Our manufacturing complex operates large-scale industrial facilities to secure continuous volume production. Explore our kiln infrastructure, stocking capabilities, and shipping routes.
@@ -40,7 +43,7 @@ export const Infrastructure: React.FC = () => {
         <div className={styles.container}>
           <div className={styles.grid}>
             {/* Facility 1 */}
-            <div className={styles.card}>
+            <div className={`${styles.card} ambient-glow-card`}>
               <h2 className={styles.cardTitle}>CONTINUOUS KILN COMPLEX</h2>
               <p className={styles.cardText}>
                 The central chimney complex drives continuous heat circulation 24/7. Air drafts are carefully managed to keep temperatures vitrifying at exactly 950°C across all active firing chambers, producing uniform physical structural properties.
@@ -52,19 +55,19 @@ export const Infrastructure: React.FC = () => {
             </div>
 
             {/* Facility 2 */}
-            <div className={styles.card}>
+            <div className={`${styles.card} ambient-glow-card`}>
               <h2 className={styles.cardTitle}>DAILY PRODUCTION YARDS</h2>
               <p className={styles.cardText}>
-                Supported by automated mixing and moulding units, we maintain a production capability of [PLACEHOLDER — DAILY CAPACITY] bricks per day during seasonal operations, keeping supply reserves stacked for commercial developments.
+                Supported by automated mixing and moulding units, we maintain continuous high-capacity production during seasonal operations, keeping supply reserves stacked for commercial developments.
               </p>
               <div className={styles.metaRow}>
                 <span className={styles.metaLabel}>CAPACITY TIER:</span>
-                <span className={styles.metaVal}>[PLACEHOLDER — BUSINESS CAPACITY LOG]</span>
+                <span className={styles.metaVal}>Continuous Seasonal Volume</span>
               </div>
             </div>
 
             {/* Facility 3 */}
-            <div className={styles.card}>
+            <div className={`${styles.card} ambient-glow-card`}>
               <h2 className={styles.cardTitle}>RAW MATERIALS DEPOT</h2>
               <p className={styles.cardText}>
                 Silt and alluvial soil storage covers protected zones. This keeps dry clays ready for pugging even during periods of inclement weather, preventing manufacturing shutdowns.
@@ -76,14 +79,14 @@ export const Infrastructure: React.FC = () => {
             </div>
 
             {/* Facility 4 */}
-            <div className={styles.card}>
+            <div className={`${styles.card} ambient-glow-card`}>
               <h2 className={styles.cardTitle}>REGIONAL SHIPPING LOGISTICS</h2>
               <p className={styles.cardText}>
-                Our loading yards support heavy multi-axle freight loading. We dispatch bulk quantities directly to developers, distributors, and construction sites throughout [PLACEHOLDER — SERVICE REGIONS / DISTRICTS].
+                Our loading yards support heavy multi-axle freight loading. We dispatch bulk quantities directly to developers, distributors, and construction sites across regional hubs.
               </p>
               <div className={styles.metaRow}>
                 <span className={styles.metaLabel}>SUPPLY RADIUS:</span>
-                <span className={styles.metaVal}>[PLACEHOLDER — TRANSPORT RANGE]</span>
+                <span className={styles.metaVal}>Regional Direct Dispatch</span>
               </div>
             </div>
           </div>
@@ -93,7 +96,7 @@ export const Infrastructure: React.FC = () => {
       {/* Logistics CTA */}
       <section className={`${styles.logisticsCTA} scroll-reveal`} aria-labelledby="logistics-title">
         <div className={styles.container}>
-          <div className={styles.logisticsGrid}>
+          <div className={`${styles.logisticsGrid} ambient-glow-card`}>
             <div className={styles.logisticsContent}>
               <h2 id="logistics-title" className={styles.ctaTitle}>
                 PLANNING SITE SHIPMENTS?

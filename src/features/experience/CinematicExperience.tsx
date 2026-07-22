@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFramePreloader } from './useFramePreloader';
 import { useExperienceProgress } from './useExperienceProgress';
 import { ExperienceCanvas } from './ExperienceCanvas';
-import { ExperienceVideo } from './ExperienceVideo';
 import { ExperienceOverlay } from './ExperienceOverlay';
 import { ExperienceNavigation } from './ExperienceNavigation';
 import { ExperienceLoader } from './ExperienceLoader';
@@ -32,21 +31,17 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   
   // Track rendering frames
   const [isLoaderDismissed, setIsLoaderDismissed] = useState(false);
-  const [isVideoReady, setIsVideoReady] = useState(false);
 
   // Setup GSAP scroll tracking
   const { progress, chapter, frameIndex, scrollToChapter } = useExperienceProgress({
     triggerRef,
   });
 
-  const isMobileVideo = sequenceType === 'mobile';
-
-  // Priority-based frame cache loader (only strictly needed for canvas/desktop now)
+  // Priority-based frame cache loader for high-performance canvas rendering
   const { cache, loadedCount, totalFrames } = useFramePreloader({
-    frameUrls: isMobileVideo ? [] : frameUrls, // bypass if mobile video
+    frameUrls,
     currentIndex: frameIndex,
     onFrameLoaded: () => {
-      if (isMobileVideo) return; // handled separately
       // Dismiss initial loader if the first chapter (frames 1–20) is fully loaded in memory
       if (!isLoaderDismissed) {
         let firstChapterLoaded = true;
@@ -62,17 +57,8 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         }
       }
     },
-    maxCacheSize: isMobileVideo ? 0 : 80,
+    maxCacheSize: sequenceType === 'mobile' ? 45 : 80,
   });
-
-  // Handle video ready for mobile
-  useEffect(() => {
-    if (isMobileVideo && isVideoReady && !isLoaderDismissed) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsLoaderDismissed(true);
-      onPreloadComplete();
-    }
-  }, [isMobileVideo, isVideoReady, isLoaderDismissed, onPreloadComplete]);
 
   // Ensure loader gets dismissed eventually if initial preload was already verified
   useEffect(() => {
@@ -111,20 +97,11 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
       >
         {/* Visual Background layer */}
         <div className={styles.canvasStickyContainer}>
-          {isMobileVideo ? (
-            <ExperienceVideo 
-              src="/experience/mobile/sequence.mp4"
-              poster="/experience/mobile/sequence/frame-0001.jpg"
-              progress={progress}
-              onReady={() => { setIsVideoReady(true); }}
-            />
-          ) : (
-            <ExperienceCanvas 
-              currentIndex={frameIndex}
-              cache={cache}
-              totalFrames={totalFrames}
-            />
-          )}
+          <ExperienceCanvas 
+            currentIndex={frameIndex}
+            cache={cache}
+            totalFrames={totalFrames}
+          />
 
           {/* Copy overlays layer */}
           {isLoaderDismissed && (
@@ -161,8 +138,8 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         {/* Actual loading state */}
         {!isLoaderDismissed && (
           <ExperienceLoader 
-            loaded={isMobileVideo ? (isVideoReady ? 20 : 0) : Math.min(20, loadedCount)} 
-            total={20} // Require at least first 20 frames for startup (or video ready)
+            loaded={Math.min(20, loadedCount)} 
+            total={20} // Require at least first 20 frames for startup
           />
         )}
       </div>

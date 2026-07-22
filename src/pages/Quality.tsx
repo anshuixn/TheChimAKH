@@ -35,12 +35,15 @@ export const Quality: React.FC = () => {
   ];
 
   return (
-    <article className={styles.pageContainer}>
+    <article className={`${styles.pageContainer} atmospheric-bg`}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
           <div className={styles.headerGrid}>
             <div>
-              <span className={styles.eyebrow}>TESTED INTEGRITY</span>
+              <div className={styles.badgeRow}>
+                <span className={styles.eyebrow}>TESTED INTEGRITY</span>
+                <span className="visual-badge">IS 3495 COMPLIANT</span>
+              </div>
               <h1 className={styles.title}>STANDARDS WE UPHOLD</h1>
               <p className={styles.description}>
                 We verify our brick batches against strict Indian Standard (IS) specifications, assuring structural safety, weathering resilience, and high density.
@@ -63,9 +66,9 @@ export const Quality: React.FC = () => {
         <div className={styles.container}>
           <div className={styles.testsGrid}>
             {tests.map((test, idx) => (
-              <div key={idx} className={styles.testCard}>
+              <div key={idx} className={`${styles.testCard} ambient-glow-card`}>
                 <h2 className={styles.testTitle}>{test.title}</h2>
-                <span className={styles.testStandard}>{test.standard}</span>
+                <span className="visual-badge" style={{ marginBottom: '0.75rem' }}>{test.standard}</span>
                 <p className={styles.testDesc}>{test.desc}</p>
               </div>
             ))}
@@ -76,7 +79,7 @@ export const Quality: React.FC = () => {
       {/* Batch Certification Info */}
       <section className={`${styles.certification} scroll-reveal`} aria-labelledby="cert-title">
         <div className={styles.container}>
-          <div className={styles.certGrid}>
+          <div className={`${styles.certGrid} ambient-glow-card`}>
             <div className={styles.certContent}>
               <h2 id="cert-title" className={styles.certTitle}>
                 BATCH VERIFICATION RECORD

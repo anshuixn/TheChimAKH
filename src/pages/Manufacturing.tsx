@@ -45,12 +45,15 @@ export const Manufacturing: React.FC = () => {
   ];
 
   return (
-    <article className={styles.pageContainer}>
+    <article className={`${styles.pageContainer} atmospheric-bg`}>
       <header className={styles.pageHeader}>
         <div className={styles.container}>
           <div className={styles.headerGrid}>
             <div>
-              <span className={styles.eyebrow}>MANUFACTURING CRAFT</span>
+              <div className={styles.badgeRow}>
+                <span className={styles.eyebrow}>MANUFACTURING CRAFT</span>
+                <span className="visual-badge">24/7 CONTINUOUS FIRING</span>
+              </div>
               <h1 className={styles.title}>FIRED BY PRECISION</h1>
               <p className={styles.description}>
                 Our brick manufacturing process combines traditional clay weathering techniques with strict control over continuous kiln temperatures, delivering highly durable construction bricks.
@@ -73,7 +76,7 @@ export const Manufacturing: React.FC = () => {
         <div className={styles.container}>
           <div className={styles.stepsGrid}>
             {steps.map((step) => (
-              <div key={step.num} className={styles.stepCard}>
+              <div key={step.num} className={`${styles.stepCard} ambient-glow-card`}>
                 <div className={styles.stepHeader}>
                   <span className={styles.stepNum}>{step.num}</span>
                   <h2 className={styles.stepTitle}>{step.title}</h2>
@@ -88,8 +91,9 @@ export const Manufacturing: React.FC = () => {
       {/* Quality commitment callout */}
       <section className={`${styles.commitment} scroll-reveal`} aria-labelledby="commitment-title">
         <div className={styles.container}>
-          <div className={styles.commitmentGrid}>
+          <div className={`${styles.commitmentGrid} ambient-glow-card`}>
             <div className={styles.commitmentContent}>
+              <span className="visual-badge" style={{ marginBottom: '1rem' }}>UNIFORM vitrification</span>
               <h2 id="commitment-title" className={styles.commitmentTitle}>
                 SUSTAINED INDUSTRIAL CONSISTENCY
               </h2>
@@ -103,7 +107,7 @@ export const Manufacturing: React.FC = () => {
             
             <div className={`${styles.imageWrapper} scroll-reveal-img`}>
               <img
-                src="/images/manufacturing_kiln.png"
+                src="/images/industrial_kiln_glow.png"
                 alt="Continuous coal-fired brick kiln glowing chambers firing clay bricks at uniform high temperatures."
                 className={styles.kilnImage}
                 loading="lazy"

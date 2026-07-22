@@ -24,15 +24,33 @@ export const Brick: React.FC = () => {
   ];
 
   return (
-    <article className={styles.pageContainer}>
+    <article className={`${styles.pageContainer} atmospheric-bg`}>
       {/* Header section */}
       <header className={styles.pageHeader}>
         <div className={styles.container}>
           <div className={styles.headerGrid}>
             <div>
-              <span className={styles.eyebrow}>OUR PRIMARY PRODUCT</span>
+              <div className={styles.badgeRow}>
+                <span className={styles.eyebrow}>OUR PRIMARY PRODUCT</span>
+                <span className="visual-badge">IS 1077 CERTIFIED</span>
+              </div>
               <h1 className={styles.title}>{RED_CLAY_BRICK.name}</h1>
               <p className={styles.description}>{RED_CLAY_BRICK.description}</p>
+
+              <div className={styles.featurePills}>
+                <div className={styles.pillItem}>
+                  <span className={styles.pillDot} />
+                  <span>100% Vitrified Clay</span>
+                </div>
+                <div className={styles.pillItem}>
+                  <span className={styles.pillDot} />
+                  <span>Zero Synthetic Additives</span>
+                </div>
+                <div className={styles.pillItem}>
+                  <span className={styles.pillDot} />
+                  <span>High Thermal Inertia</span>
+                </div>
+              </div>
             </div>
             <div className={`${styles.headerImageWrapper} scroll-reveal-img`}>
               <img 
@@ -88,7 +106,7 @@ export const Brick: React.FC = () => {
       <section className={`${styles.applicationsSection} scroll-reveal`} aria-labelledby="apps-heading">
         <div className={styles.container}>
           <div className={styles.grid}>
-            <div>
+            <div className="ambient-glow-card">
               <h2 id="apps-heading" className={styles.sectionTitle}>RECOMMENDED APPLICATIONS</h2>
               <ul className={styles.appsList}>
                 {RED_CLAY_BRICK.applications.map((app, idx) => (
@@ -100,7 +118,7 @@ export const Brick: React.FC = () => {
               </ul>
             </div>
 
-            <div>
+            <div className="ambient-glow-card">
               <h2 className={styles.sectionTitle}>PACKAGING & LOGISTICS</h2>
               <p className={styles.packagingText}>
                 {RED_CLAY_BRICK.packaging}
