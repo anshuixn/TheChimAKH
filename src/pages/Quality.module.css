@@ -20,7 +20,10 @@
     url('/images/quality_testing_lab_bg.png');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
+  @supports not (-webkit-touch-callout: none) {
+    background-attachment: fixed;
+  }
 }
 
 .badgeRow {
@@ -130,7 +133,10 @@
     url('/images/stacked_bricks_warehouse_bg.png');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
+  @supports not (-webkit-touch-callout: none) {
+    background-attachment: fixed;
+  }
 }
 
 .certGrid {

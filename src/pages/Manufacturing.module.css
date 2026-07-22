@@ -20,7 +20,10 @@
     url('/images/clay_drying_field_bg.png');
   background-size: cover;
   background-position: center top;
-  background-attachment: fixed;
+  background-attachment: scroll;
+  @supports not (-webkit-touch-callout: none) {
+    background-attachment: fixed;
+  }
 }
 
 .badgeRow {
@@ -141,7 +144,10 @@
     url('/images/kiln_interior_fire_bg.png');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
+  @supports not (-webkit-touch-callout: none) {
+    background-attachment: fixed;
+  }
 }
 
 .commitmentGrid {

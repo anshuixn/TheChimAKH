@@ -91,7 +91,8 @@ export function useFramePreloader({
       }
 
       // Abort active requests that are now too far from current index to yield connection pool slots
-      const maxKeepDistance = 30;
+      // 60 frame distance: wide enough that reverse scroll doesn't cause re-fetches
+      const maxKeepDistance = 60;
       const toAbort: number[] = [];
       activeRequestsRef.current.forEach((_, idx) => {
         if (Math.abs(idx - currentIndex) > maxKeepDistance) {
@@ -112,7 +113,8 @@ export function useFramePreloader({
       }
 
       // Increased concurrency: more parallel loads = frames ready faster during scroll
-      const maxConcurrent = networkTier === 'high' ? 6 : networkTier === 'medium' ? 4 : 2;
+      // 12 parallel is safe — browsers limit to ~6-8 per origin so extras queue efficiently
+      const maxConcurrent = networkTier === 'high' ? 12 : networkTier === 'medium' ? 8 : 4;
       const batch = queue.slice(0, maxConcurrent);
 
       batch.forEach((index) => {

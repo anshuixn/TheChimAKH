@@ -42,22 +42,26 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
     frameUrls,
     currentIndex: frameIndex,
     onFrameLoaded: () => {
-      // Dismiss initial loader if the first chapter (frames 1–20) is fully loaded in memory
+      // Dismiss initial loader once a meaningful forward buffer exists (40 frames)
+      // This prevents the user from scrolling into uncached territory immediately
       if (!isLoaderDismissed) {
-        let firstChapterLoaded = true;
-        for (let i = 1; i <= 20; i++) {
+        let bufferReady = true;
+        const BUFFER_GATE = Math.min(40, frameUrls.length);
+        for (let i = 1; i <= BUFFER_GATE; i++) {
           if (!cache.has(i)) {
-            firstChapterLoaded = false;
+            bufferReady = false;
             break;
           }
         }
-        if (firstChapterLoaded) {
+        if (bufferReady) {
           setIsLoaderDismissed(true);
           onPreloadComplete();
         }
       }
     },
-    maxCacheSize: sequenceType === 'mobile' ? 45 : 80,
+    // Larger cache on mobile prevents frame eviction during active scroll
+    // 45 was too small — frames were being evicted and re-fetched, causing black
+    maxCacheSize: sequenceType === 'mobile' ? 120 : 160,
   });
 
   // Ensure loader gets dismissed eventually if initial preload was already verified
@@ -138,8 +142,8 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         {/* Actual loading state */}
         {!isLoaderDismissed && (
           <ExperienceLoader 
-            loaded={Math.min(20, loadedCount)} 
-            total={20} // Require at least first 20 frames for startup
+            loaded={Math.min(40, loadedCount)} 
+            total={40} // Wait for 40-frame buffer before enabling scroll
           />
         )}
       </div>
