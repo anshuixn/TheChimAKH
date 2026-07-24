@@ -90,7 +90,7 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
       // on every RAF tick — it always reflects the true current scroll position.
       // The closed-over `currentIndex` prop may be 1-2 React render cycles
       // behind during a fast fling due to setState batching.
-      const target = currentIndexRef.current ?? currentIndex;
+      const target = currentIndexRef.current;
       if (typeof target !== 'number' || isNaN(target)) return;
 
       const sizeChanged =
