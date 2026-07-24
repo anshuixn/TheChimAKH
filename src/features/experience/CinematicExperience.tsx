@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useFramePreloader } from './useFramePreloader';
 import { useExperienceProgress } from './useExperienceProgress';
 import { ExperienceCanvas } from './ExperienceCanvas';
@@ -28,13 +28,24 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   sequenceType,
 }) => {
   const triggerRef = useRef<HTMLDivElement | null>(null);
-  
+
   // Track rendering frames
   const [isLoaderDismissed, setIsLoaderDismissed] = useState(false);
+
+  // ── Hot-path frame index (bypasses React render cycle) ──────────────────
+  // ExperienceCanvas reads this ref directly on every RAF tick.
+  // This eliminates the stale-index problem caused by React batching setState
+  // across multiple GSAP onUpdate calls during a fast-fling scroll.
+  const canvasFrameIndexRef = useRef<number>(1);
+
+  const onFrameIndexChange = useCallback((index: number) => {
+    canvasFrameIndexRef.current = index;
+  }, []);
 
   // Setup GSAP scroll tracking
   const { progress, chapter, frameIndex, scrollToChapter } = useExperienceProgress({
     triggerRef,
+    onFrameIndexChange,
   });
 
   // Priority-based frame cache loader for high-performance canvas rendering
@@ -59,8 +70,8 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         }
       }
     },
-    // Larger cache on mobile prevents frame eviction during active scroll
-    // 45 was too small — frames were being evicted and re-fetched, causing black
+    // Large cache to minimize eviction during active scroll.
+    // The pin/unpin API in frameCache protects lastGoodFrame from being GPU-closed.
     maxCacheSize: sequenceType === 'mobile' ? 120 : 160,
   });
 
@@ -84,7 +95,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
     };
   }, [isLoaderDismissed]);
 
-  // Automatically transition to website when user scrolls to the end of the cinematic experience
+  // Automatically transition to website when user scrolls to the end
   useEffect(() => {
     if (progress >= 0.99) {
       onExit();
@@ -103,6 +114,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         <div className={styles.canvasStickyContainer}>
           <ExperienceCanvas 
             currentIndex={frameIndex}
+            currentIndexRef={canvasFrameIndexRef}
             cache={cache}
             totalFrames={totalFrames}
           />
@@ -143,7 +155,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
         {!isLoaderDismissed && (
           <ExperienceLoader 
             loaded={Math.min(40, loadedCount)} 
-            total={40} // Wait for 40-frame buffer before enabling scroll
+            total={40}
           />
         )}
       </div>

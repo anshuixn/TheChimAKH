@@ -11,8 +11,30 @@ export class ProximityFrameCache {
   private maxCapacity: number;
   private accessCounter = 0;
 
+  /** Frame index currently pinned (protected from eviction + close). */
+  private pinnedIndex: number | null = null;
+
   constructor(maxCapacity = 80) {
     this.maxCapacity = maxCapacity;
+  }
+
+  /**
+   * Pin a frame by index so it is never evicted or GPU-closed.
+   * Call this whenever ExperienceCanvas adopts a new lastGoodFrame.
+   * Call unpin(oldIndex) on the previous lastGoodFrame first.
+   */
+  public pin(index: number): void {
+    this.pinnedIndex = index;
+  }
+
+  /**
+   * Unpin a frame, allowing it to be evicted normally.
+   * Safe to call with any index — no-op if not currently pinned.
+   */
+  public unpin(index: number): void {
+    if (this.pinnedIndex === index) {
+      this.pinnedIndex = null;
+    }
   }
 
   public get(index: number): DecodedFrame | null {
@@ -54,6 +76,7 @@ export class ProximityFrameCache {
    * 1. Primary sort: Maximum distance from current index (Math.abs(index - currentIndex)).
    * 2. Secondary sort (tie-breaker): Least recently accessed (oldest lastAccessed counter).
    * 3. Never evict the current index frame unless it is the only item in the cache.
+   * 4. Never evict the pinned frame (it is held by ExperienceCanvas as lastGoodFrame).
    */
   private evict(currentIndex: number): void {
     if (this.cache.size === 0) return;
@@ -64,6 +87,11 @@ export class ProximityFrameCache {
     for (const entry of this.cache.values()) {
       // Never evict current frame if other options exist
       if (entry.index === currentIndex && this.cache.size > 1) {
+        continue;
+      }
+
+      // Never evict the pinned (lastGoodFrame) — it may be closed and leave the canvas black
+      if (entry.index === this.pinnedIndex && this.cache.size > 1) {
         continue;
       }
 
@@ -89,8 +117,12 @@ export class ProximityFrameCache {
     const entry = this.cache.get(index);
     if (!entry) return;
 
-    // Call close() if it exists on the frame (e.g. ImageBitmap) to release GPU memory immediately
-    if ('close' in entry.frame && typeof entry.frame.close === 'function') {
+    // Do NOT close() if this is the pinned frame — ExperienceCanvas still holds a live
+    // reference to it as lastGoodFrameRef. Closing it would GPU-destroy the bitmap and
+    // cause ctx.drawImage() to silently fail, leaving the canvas at brand-fill color.
+    const isPinned = index === this.pinnedIndex;
+
+    if (!isPinned && 'close' in entry.frame && typeof entry.frame.close === 'function') {
       entry.frame.close();
     }
     
@@ -105,6 +137,7 @@ export class ProximityFrameCache {
       this.evictEntry(index);
     }
     this.cache.clear();
+    this.pinnedIndex = null;
   }
 
   public get size(): number {
