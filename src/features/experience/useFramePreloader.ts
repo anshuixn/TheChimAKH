@@ -75,7 +75,7 @@ export function useFramePreloader({
         }
       }
       remaining.sort((a, b) => a.dist - b.dist);
-      remaining.forEach((r) => push(r.index));
+      remaining.forEach((r) => { push(r.index); });
 
       return priorities;
     };
