@@ -26,13 +26,13 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
   const lastGoodFrameRef = useRef<DecodedFrame | null>(null);
   const lastGoodIndexRef = useRef<number>(-1);
   const lastDimensionsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
+  // true after at least one frame has been successfully drawn — gate for the cold-start fillRect
+  const everDrawnRef = useRef(false);
 
   const adoptLastGoodFrame = useCallback(
     (frame: DecodedFrame, index: number) => {
       const oldIndex = lastGoodIndexRef.current;
-      if (oldIndex !== -1 && oldIndex !== index) {
-        cache.unpin(oldIndex);
-      }
+      if (oldIndex !== -1 && oldIndex !== index) cache.unpin(oldIndex);
       cache.pin(index);
       lastGoodFrameRef.current = frame;
       lastGoodIndexRef.current = index;
@@ -43,30 +43,23 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
   const onCanvasResized = useCallback((canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    ctx.fillStyle = FILL_COLOR;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     const frame = lastGoodFrameRef.current;
-    if (frame) renderFrame(ctx, frame, canvas.width, canvas.height);
+    if (frame) {
+      // Repaint last good frame directly — no fillRect, no black flash
+      renderFrame(ctx, frame, canvas.width, canvas.height);
+    } else {
+      // True cold start: no frame ever drawn yet, fill brand color
+      ctx.fillStyle = FILL_COLOR;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
     lastDimensionsRef.current = { w: canvas.width, h: canvas.height };
   }, []);
 
   const dimensions = useCanvasSizing(containerRef, canvasRef, onCanvasResized);
 
-  // ── Single persistent RAF loop ─────────────────────────────────────────────
-  //
-  // KEY FIX: instead of scheduling one-shot RAFs (which get cancelled and
-  // rescheduled on every React re-render), we run ONE persistent rAF loop that
-  // reads the hot-path ref on every tick. This means:
-  //   - Zero RAF cancellation/rescheduling overhead
-  //   - Zero React re-render interference with the paint cycle
-  //   - The canvas always paints on the NEXT frame boundary after a scroll event,
-  //     regardless of when React decides to flush its render queue
   const rafIdRef = useRef<number>(0);
-  // Dirty flag: set to true when scroll position changed since last paint.
-  // The RAF loop checks this and skips the drawImage call if nothing changed.
   const dirtyRef = useRef(true);
 
-  // Keep stable refs to avoid re-starting the RAF loop on every render
   const cacheRef = useRef(cache);
   const totalFramesRef = useRef(totalFrames);
   const adoptRef = useRef(adoptLastGoodFrame);
@@ -74,31 +67,23 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
   useEffect(() => { totalFramesRef.current = totalFrames; }, [totalFrames]);
   useEffect(() => { adoptRef.current = adoptLastGoodFrame; }, [adoptLastGoodFrame]);
 
-  // Mark dirty whenever the React-state index changes (belt-and-suspenders alongside hot ref)
-  useEffect(() => {
-    dirtyRef.current = true;
-  }, [currentIndex, dimensions]);
+  useEffect(() => { dirtyRef.current = true; }, [currentIndex, dimensions]);
 
-  // Start the persistent RAF loop once on mount, stop it on unmount
   useEffect(() => {
     const paint = () => {
       rafIdRef.current = requestAnimationFrame(paint);
 
       const canvas = canvasRef.current;
       if (!canvas) return;
-
       const w = canvas.width;
       const h = canvas.height;
       if (w === 0 || h === 0) return;
 
-      // Read latest index from hot-path ref — always current even mid-fling
       const target = currentIndexRef.current;
       if (typeof target !== 'number' || isNaN(target)) return;
 
       const sizeChanged = w !== lastDimensionsRef.current.w || h !== lastDimensionsRef.current.h;
       const indexChanged = target !== lastGoodIndexRef.current;
-
-      // Skip paint if nothing changed — saves ~0.3ms of GPU work per idle frame
       if (!dirtyRef.current && !sizeChanged && !indexChanged) return;
       dirtyRef.current = false;
 
@@ -113,7 +98,7 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
       let frame: DecodedFrame | null = c.get(target);
       let resolvedIndex = target;
 
-      // B: nearest within ±10
+      // B: nearest cached within ±10 (covers preloader lag during fast scroll)
       if (!frame) {
         const WINDOW = 10;
         for (let d = 1; d <= WINDOW; d++) {
@@ -128,7 +113,7 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
         }
       }
 
-      // C: hold last good (never go blank)
+      // C: hold last good frame — never go blank if we've ever drawn anything
       const usingFallback = !frame;
       if (!frame && lastGoodFrameRef.current) {
         frame = lastGoodFrameRef.current;
@@ -139,27 +124,50 @@ export const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({
       if (frame) {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
-        ctx.fillStyle = FILL_COLOR;
-        ctx.fillRect(0, 0, w, h);
+
+        // KEY FIX: do NOT fillRect before drawImage.
+        //
+        // JPEG frames are 100% opaque — drawImage paints every destination pixel.
+        // There is NO need to clear the canvas before drawing.
+        //
+        // Why this matters on iOS Safari:
+        //   - `will-change` creates a GPU compositor layer for the canvas.
+        //   - CPU-side JS operations (fillRect, drawImage) are synchronous, but
+        //     the GPU texture upload is NOT — it happens between compositor frames.
+        //   - If we fillRect first, the GPU can snapshot the canvas mid-upload
+        //     (after fillRect, before drawImage completes the GPU upload),
+        //     showing one brief brand-color (dark/black) frame to the user.
+        //   - By skipping fillRect, the GPU always sees either the old frame
+        //     (stale snapshot) or the new frame (updated snapshot) — never brand color.
+        //
+        // For the cold-start case (no frame ever drawn), we fill once below.
+        if (!everDrawnRef.current) {
+          // Cold start: first paint ever — fill brand color THEN draw frame
+          ctx.fillStyle = FILL_COLOR;
+          ctx.fillRect(0, 0, w, h);
+          everDrawnRef.current = true;
+        }
+
         renderFrame(ctx, frame, w, h);
+
         if (!usingFallback && resolvedIndex === target) {
           adoptRef.current(frame, resolvedIndex);
         }
         lastDimensionsRef.current = { w, h };
-      } else {
+      } else if (!everDrawnRef.current) {
+        // True cold start: nothing in cache yet — fill brand color once
         ctx.fillStyle = FILL_COLOR;
         ctx.fillRect(0, 0, w, h);
       }
+      // If frame is null but everDrawnRef is true, do nothing —
+      // the canvas already shows the last good frame. No action is better than black.
     };
 
     rafIdRef.current = requestAnimationFrame(paint);
-    return () => {
-      cancelAnimationFrame(rafIdRef.current);
-    };
+    return () => { cancelAnimationFrame(rafIdRef.current); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty deps: loop starts once, reads everything through refs
+  }, []);
 
-  // Unpin on unmount
   useEffect(() => {
     return () => {
       if (lastGoodIndexRef.current !== -1) {

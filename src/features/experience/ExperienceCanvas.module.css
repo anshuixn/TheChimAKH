@@ -4,10 +4,19 @@
   height: 100%;
   background-color: var(--color-kiln-black);
   overflow: hidden;
-  /* Force GPU compositing layer — prevents iOS Safari from wiping canvas on scroll */
-  will-change: transform;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  /*
+   * NO will-change: transform here.
+   *
+   * will-change: transform would isolate the canvas into its own GPU compositor
+   * layer. On iOS Safari, canvas writes (fillRect, drawImage) are CPU-side
+   * operations. The GPU texture upload to the compositor layer is async —
+   * iOS can snapshot an intermediate canvas state (after fillRect, before
+   * drawImage) and show it to the user for one frame = black flash.
+   *
+   * Without will-change, the canvas stays in the main compositor layer.
+   * GPU texture uploads are synchronous with the main layer rasterization —
+   * no intermediate state is ever shown.
+   */
 }
 
 .canvasElement {
@@ -17,8 +26,10 @@
   width: 100%;
   height: 100%;
   display: block;
-  /* Keep canvas on its own GPU compositing layer */
-  will-change: contents;
-  /* Fallback fill for first paint before any frame loads */
+  /* Brand color shows through CSS background during initial load before first frame */
   background-color: var(--color-kiln-black);
+  /*
+   * NO will-change: contents here either.
+   * Same reason: separate GPU layer = async texture upload = flash risk.
+   */
 }

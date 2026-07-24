@@ -20,4 +20,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* Compositor hint on the pinned container (not the canvas) — keeps pin smooth */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
