@@ -39,46 +39,43 @@ export function useFramePreloader({
   useEffect(() => {
     // 1. Establish priorities for preloading
     const getLoadPriorities = (): number[] => {
+      const seen = new Set<number>();
       const priorities: number[] = [];
 
+      const push = (idx: number) => {
+        if (!seen.has(idx)) { seen.add(idx); priorities.push(idx); }
+      };
+
       // Priority 1: Current frame
-      if (!cache.has(currentIndex)) {
-        priorities.push(currentIndex);
-      }
+      if (!cache.has(currentIndex)) push(currentIndex);
 
       // Priority 2: Immediate future frames
       for (let i = 1; i <= preloadWindow; i++) {
         const idx = currentIndex + i;
-        if (idx <= frameUrls.length && !cache.has(idx)) {
-          priorities.push(idx);
-        }
+        if (idx <= frameUrls.length && !cache.has(idx)) push(idx);
       }
 
       // Priority 3: Immediate previous frames (buffer backward for reverse scroll)
       for (let i = 1; i <= 20; i++) {
         const idx = currentIndex - i;
-        if (idx >= 1 && !cache.has(idx)) {
-          priorities.push(idx);
-        }
+        if (idx >= 1 && !cache.has(idx)) push(idx);
       }
 
       // Priority 4: Chapter boundary frames (start frames of each chapter)
       EXPERIENCE_CHAPTERS.forEach((ch) => {
         const startFrame = ch.frameRange.start;
-        if (!cache.has(startFrame) && !priorities.includes(startFrame)) {
-          priorities.push(startFrame);
-        }
+        if (!cache.has(startFrame)) push(startFrame);
       });
 
       // Priority 5: Rest of the frames, sorted by proximity to currentIndex
       const remaining: { index: number; dist: number }[] = [];
       for (let idx = 1; idx <= frameUrls.length; idx++) {
-        if (!cache.has(idx) && !priorities.includes(idx)) {
+        if (!cache.has(idx) && !seen.has(idx)) {
           remaining.push({ index: idx, dist: Math.abs(idx - currentIndex) });
         }
       }
       remaining.sort((a, b) => a.dist - b.dist);
-      remaining.forEach((r) => priorities.push(r.index));
+      remaining.forEach((r) => push(r.index));
 
       return priorities;
     };

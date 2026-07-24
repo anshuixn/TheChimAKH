@@ -10,17 +10,30 @@
 
 export type DecodedFrame = ImageBitmap | HTMLImageElement;
 
+/**
+ * Maximum canvas display dimension hint used when decoding ImageBitmaps.
+ * Decoding at display size means the GPU texture is already the right size —
+ * ctx.drawImage() requires zero scaling work at paint time.
+ *
+ * We use the longer dimension so the cover-mode crop logic always has
+ * enough pixels regardless of orientation.
+ */
+const getDisplayHint = (): number => {
+  if (typeof window === 'undefined') return 1920;
+  const dpr = Math.min(2.0, window.devicePixelRatio || 1);
+  return Math.round(Math.max(window.screen.width, window.screen.height) * dpr);
+};
+
 export async function loadFrame(
   url: string,
   signal?: AbortSignal
 ): Promise<DecodedFrame> {
-  // Check if AbortSignal is already aborted
   if (signal?.aborted) {
     throw new DOMException('Aborted', 'AbortError');
   }
 
-  // Check if createImageBitmap is supported and available in the environment
-  const useImageBitmap = typeof window !== 'undefined' && typeof window.createImageBitmap === 'function';
+  const useImageBitmap =
+    typeof window !== 'undefined' && typeof window.createImageBitmap === 'function';
 
   if (useImageBitmap) {
     try {
@@ -30,29 +43,45 @@ export async function loadFrame(
       }
 
       const blob = await response.blob();
-      
-      // Additional check before starting expensive decode
+
       if (signal?.aborted) {
         throw new DOMException('Aborted', 'AbortError');
       }
 
-      const bitmap = await window.createImageBitmap(blob);
+      // Decode at display resolution — eliminates GPU scaling work at every drawImage call.
+      // resizeWidth is the longer dimension; the browser derives height proportionally.
+      // premultiplyAlpha: 'none' avoids an extra alpha-premultiplication pass on opaque JPEGs.
+      const displayHint = getDisplayHint();
+      const bitmap = await window.createImageBitmap(blob, {
+        resizeWidth: displayHint,
+        resizeQuality: 'medium', // faster than 'high', visually identical at display size
+        premultiplyAlpha: 'none',
+      });
       return bitmap;
     } catch (err) {
-      // If aborted, propagate AbortError
       if (err instanceof DOMException && err.name === 'AbortError') {
         throw err;
       }
-      
-      // Fallback to HTMLImageElement on general network / decode errors
-      console.warn(`[FrameLoader] createImageBitmap failed for ${url}, falling back to HTMLImageElement. Error:`, err);
+      // createImageBitmap with options failed — retry without resize options
+      // (some older mobile browsers reject unknown ImageBitmapOptions keys)
+      try {
+        const response2 = await fetch(url, { signal });
+        if (!response2.ok) throw new Error(`Retry fetch failed: ${response2.statusText}`);
+        const blob2 = await response2.blob();
+        if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+        const bitmap2 = await window.createImageBitmap(blob2);
+        return bitmap2;
+      } catch (err2) {
+        if (err2 instanceof DOMException && err2.name === 'AbortError') throw err2;
+        console.warn(`[FrameLoader] createImageBitmap failed for ${url}, falling back to HTMLImageElement.`, err2);
+      }
     }
   }
 
   // HTMLImageElement fallback
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
-    
+
     const cleanup = () => {
       img.onload = null;
       img.onerror = null;
@@ -61,7 +90,7 @@ export async function loadFrame(
 
     const handleAbort = () => {
       cleanup();
-      img.src = ''; // Cancel loading of image
+      img.src = '';
       reject(new DOMException('Aborted', 'AbortError'));
     };
 
@@ -77,12 +106,8 @@ export async function loadFrame(
       cleanup();
       if (typeof img.decode === 'function') {
         img.decode()
-          .then(() => {
-            resolve(img);
-          })
-          .catch(() => {
-            resolve(img); // Resolve anyway if decode fails
-          });
+          .then(() => { resolve(img); })
+          .catch(() => { resolve(img); });
       } else {
         resolve(img);
       }
