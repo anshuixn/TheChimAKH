@@ -66,7 +66,7 @@ export async function loadFrame(
       // (some older mobile browsers reject unknown ImageBitmapOptions keys)
       try {
         const response2 = await fetch(url, { signal });
-        if (!response2.ok) throw new Error(`Retry fetch failed: ${response2.statusText}`, { cause: err });
+        if (!response2.ok) { const e = new Error(`Retry fetch failed: ${response2.statusText}`); Object.assign(e, { cause: err }); throw e; }
         const blob2 = await response2.blob();
         if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
         const bitmap2 = await window.createImageBitmap(blob2);
