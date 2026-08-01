@@ -251,6 +251,11 @@ export const Home: React.FC = () => {
           isInitialPreloadReady={preloadProgress >= 20}
           onPreloadComplete={handlePreloadComplete}
           sequenceType={sequenceType}
+          videoUrl={
+            sequenceType === 'mobile'
+              ? '/experience/mobile/experience-mobile.mp4'
+              : '/experience/desktop/experience-desktop.mp4'
+          }
         />
       );
 
