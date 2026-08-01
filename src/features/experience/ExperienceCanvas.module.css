@@ -28,8 +28,8 @@
   display: block;
   /* Brand color shows through CSS background during initial load before first frame */
   background-color: var(--color-kiln-black);
-  /*
-   * NO will-change: contents here either.
-   * Same reason: separate GPU layer = async texture upload = flash risk.
-   */
+  /* Visual enhancement: crisp contrast & rich clay color vibrancy */
+  filter: contrast(1.05) saturate(1.08) brightness(1.02);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }

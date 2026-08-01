@@ -48,15 +48,8 @@ export async function loadFrame(
         throw new DOMException('Aborted', 'AbortError');
       }
 
-      // Decode at display resolution — eliminates GPU scaling work at every drawImage call.
-      // resizeWidth is the longer dimension; the browser derives height proportionally.
-      // premultiplyAlpha: 'none' avoids an extra alpha-premultiplication pass on opaque JPEGs.
-      const displayHint = getDisplayHint();
-      const bitmap = await window.createImageBitmap(blob, {
-        resizeWidth: displayHint,
-        resizeQuality: 'medium', // faster than 'high', visually identical at display size
-        premultiplyAlpha: 'none',
-      });
+      // Decode at full native resolution — preserves crisp brick details, sharp chimney text, and maximum clarity.
+      const bitmap = await window.createImageBitmap(blob);
       return bitmap;
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {

@@ -28,7 +28,7 @@ export function useCanvasSizing(
     if (!container || !canvas) return;
 
     const applySizing = (cssWidth: number, cssHeight: number) => {
-      const dpr = Math.min(2.0, window.devicePixelRatio || 1.0);
+      const dpr = Math.min(3.0, window.devicePixelRatio || 1.0);
       // Use Math.round to avoid sub-pixel rounding differences between ticks
       const physW = Math.round(cssWidth * dpr);
       const physH = Math.round(cssHeight * dpr);
@@ -77,7 +77,7 @@ export function useCanvasSizing(
       if (entry.devicePixelContentBoxSize.length > 0) {
         // This gives us physical pixels directly — no DPR needed
         // We still store as CSS px for setDimensions (UI layout uses CSS px)
-        const dpr = Math.min(2.0, window.devicePixelRatio || 1.0);
+        const dpr = Math.min(3.0, window.devicePixelRatio || 1.0);
         const physW = entry.devicePixelContentBoxSize[0].inlineSize;
         const physH = entry.devicePixelContentBoxSize[0].blockSize;
         cssWidth = physW / dpr;
