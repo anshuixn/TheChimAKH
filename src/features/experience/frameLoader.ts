@@ -10,19 +10,6 @@
 
 export type DecodedFrame = ImageBitmap | HTMLImageElement;
 
-/**
- * Maximum canvas display dimension hint used when decoding ImageBitmaps.
- * Decoding at display size means the GPU texture is already the right size —
- * ctx.drawImage() requires zero scaling work at paint time.
- *
- * We use the longer dimension so the cover-mode crop logic always has
- * enough pixels regardless of orientation.
- */
-const getDisplayHint = (): number => {
-  if (typeof window === 'undefined') return 1920;
-  const dpr = Math.min(2.0, window.devicePixelRatio || 1);
-  return Math.round(Math.max(window.screen.width, window.screen.height) * dpr);
-};
 
 export async function loadFrame(
   url: string,
