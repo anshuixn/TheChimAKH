@@ -29,6 +29,10 @@ export const Home: React.FC = () => {
     if (typeof window !== 'undefined' && window.location.hash) {
       return 'SEMANTIC_HOME';
     }
+    // On mobile devices: skip the scroll experience intro and load the main website directly
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      return 'SEMANTIC_HOME';
+    }
     return 'ENTRY';
   });
 
@@ -73,13 +77,13 @@ export const Home: React.FC = () => {
       });
   }, [sequenceType]);
 
-  // Sync state transitions on device performance capability discovery
+  // Sync state transitions on device performance capability or sequence type discovery
   useEffect(() => {
-    if (deviceTier === 'static') {
+    if (deviceTier === 'static' || sequenceType === 'mobile') {
       /* eslint-disable-next-line react-hooks/set-state-in-effect */
-      setState('STATIC_FALLBACK');
+      setState(sequenceType === 'mobile' ? 'SEMANTIC_HOME' : 'STATIC_FALLBACK');
     }
-  }, [deviceTier]);
+  }, [deviceTier, sequenceType]);
 
   // Sync general experience state machine to DOM attribute
   useEffect(() => {
