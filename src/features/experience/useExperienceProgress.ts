@@ -44,7 +44,7 @@ export function useExperienceProgress({ triggerRef, onFrameIndexChange }: Progre
         start: 'top top',
         end: '+=400%',
         pin: true,
-        scrub: isMobile ? 0.3 : true,
+        scrub: isMobile ? 0.3 : 0.5,
         onUpdate: (self) => {
           if (!isMountedRef.current) return;
           const rawProgress = self.progress;
