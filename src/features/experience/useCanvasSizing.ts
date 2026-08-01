@@ -74,12 +74,12 @@ export function useCanvasSizing(
       let cssWidth: number;
       let cssHeight: number;
 
-      if (entry.devicePixelContentBoxSize && entry.devicePixelContentBoxSize.length > 0) {
+      if (entry.devicePixelContentBoxSize.length > 0) {
         // This gives us physical pixels directly — no DPR needed
         // We still store as CSS px for setDimensions (UI layout uses CSS px)
         const dpr = Math.min(2.0, window.devicePixelRatio || 1.0);
-        const physW = (entry.devicePixelContentBoxSize[0] as ResizeObserverSize).inlineSize;
-        const physH = (entry.devicePixelContentBoxSize[0] as ResizeObserverSize).blockSize;
+        const physW = entry.devicePixelContentBoxSize[0].inlineSize;
+        const physH = entry.devicePixelContentBoxSize[0].blockSize;
         cssWidth = physW / dpr;
         cssHeight = physH / dpr;
       } else {
