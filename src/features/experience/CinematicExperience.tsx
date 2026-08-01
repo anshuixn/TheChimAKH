@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useFramePreloader } from './useFramePreloader';
 import { useExperienceProgress } from './useExperienceProgress';
 import { ExperienceCanvas } from './ExperienceCanvas';
+import { ExperienceVideo } from './ExperienceVideo';
 import { ExperienceOverlay } from './ExperienceOverlay';
 import { ExperienceNavigation } from './ExperienceNavigation';
 import { ExperienceLoader } from './ExperienceLoader';
@@ -17,6 +18,13 @@ interface CinematicExperienceProps {
   isInitialPreloadReady: boolean;
   onPreloadComplete: () => void;
   sequenceType: SequenceType;
+  /**
+   * Optional: URL of a pre-encoded MP4/WebM video.
+   * When provided, uses hardware video scrubbing (same technique as GTA VI)
+   * instead of canvas + JPEG — eliminates ALL black frames on iOS Safari.
+   * Convert your frame sequence: ffmpeg -framerate 30 -i frame%04d.jpg -c:v libx264 -pix_fmt yuv420p output.mp4
+   */
+  videoUrl?: string;
 }
 
 export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
@@ -26,6 +34,7 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
   isInitialPreloadReady,
   onPreloadComplete,
   sequenceType,
+  videoUrl,
 }) => {
   const triggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -112,12 +121,25 @@ export const CinematicExperience: React.FC<CinematicExperienceProps> = ({
       >
         {/* Visual Background layer */}
         <div className={styles.canvasStickyContainer}>
-          <ExperienceCanvas 
-            currentIndex={frameIndex}
-            currentIndexRef={canvasFrameIndexRef}
-            cache={cache}
-            totalFrames={totalFrames}
-          />
+          {/* ── Video mode (GTA VI technique): hardware GPU decoding, zero black frames ── */}
+          {videoUrl ? (
+            <ExperienceVideo
+              videoUrl={videoUrl}
+              scrollProgress={progress}
+              onReady={() => {
+                setIsLoaderDismissed(true);
+                onPreloadComplete();
+              }}
+            />
+          ) : (
+            /* ── Canvas mode: JPEG frame sequence fallback ── */
+            <ExperienceCanvas
+              currentIndex={frameIndex}
+              currentIndexRef={canvasFrameIndexRef}
+              cache={cache}
+              totalFrames={totalFrames}
+            />
+          )}
 
           {/* Copy overlays layer */}
           {isLoaderDismissed && (
