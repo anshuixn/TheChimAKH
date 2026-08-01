@@ -254,7 +254,7 @@ export const Home: React.FC = () => {
           videoUrl={
             sequenceType === 'mobile'
               ? '/experience/mobile/experience-mobile.mp4'
-              : '/experience/desktop/experience-desktop.mp4'
+              : undefined
           }
         />
       );
