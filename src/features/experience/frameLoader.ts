@@ -10,19 +10,7 @@
 
 export type DecodedFrame = ImageBitmap | HTMLImageElement;
 
-/**
- * Maximum canvas display dimension hint used when decoding ImageBitmaps.
- * Decoding at display size means the GPU texture is already the right size —
- * ctx.drawImage() requires zero scaling work at paint time.
- *
- * We use the longer dimension so the cover-mode crop logic always has
- * enough pixels regardless of orientation.
- */
-const getDisplayHint = (): number => {
-  if (typeof window === 'undefined') return 1920;
-  const dpr = Math.min(2.0, window.devicePixelRatio || 1);
-  return Math.round(Math.max(window.screen.width, window.screen.height) * dpr);
-};
+
 
 export async function loadFrame(
   url: string,
@@ -51,12 +39,8 @@ export async function loadFrame(
       // Decode at display resolution — eliminates GPU scaling work at every drawImage call.
       // resizeWidth is the longer dimension; the browser derives height proportionally.
       // premultiplyAlpha: 'none' avoids an extra alpha-premultiplication pass on opaque JPEGs.
-      const displayHint = getDisplayHint();
-      const bitmap = await window.createImageBitmap(blob, {
-        resizeWidth: displayHint,
-        resizeQuality: 'medium', // faster than 'high', visually identical at display size
-        premultiplyAlpha: 'none',
-      });
+      // Decode at full native resolution — eliminates downscaling blurriness
+      const bitmap = await window.createImageBitmap(blob);
       return bitmap;
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
