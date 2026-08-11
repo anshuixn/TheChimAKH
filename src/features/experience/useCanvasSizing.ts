@@ -71,21 +71,8 @@ export function useCanvasSizing(
 
       // Prefer devicePixelContentBoxSize (physical pixels) if available — avoids
       // double DPR multiplication on browsers that support it.
-      let cssWidth: number;
-      let cssHeight: number;
-
-      if (entry.devicePixelContentBoxSize.length > 0) {
-        // This gives us physical pixels directly — no DPR needed
-        // We still store as CSS px for setDimensions (UI layout uses CSS px)
-        const dpr = window.devicePixelRatio || 1.0;
-        const physW = entry.devicePixelContentBoxSize[0].inlineSize;
-        const physH = entry.devicePixelContentBoxSize[0].blockSize;
-        cssWidth = physW / dpr;
-        cssHeight = physH / dpr;
-      } else {
-        cssWidth = entry.contentRect.width;
-        cssHeight = entry.contentRect.height;
-      }
+      const cssWidth = entry.contentRect.width;
+      const cssHeight = entry.contentRect.height;
 
       if (firstResizeRef.current) {
         // Apply immediately on first observation — eliminates blank first frame
